@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>About Us | Triple R Bar Restaurant — Sandy Ground, Saint Martin</title>
+    <meta name="description" content="The story behind Triple R Bar Restaurant — a Caribbean soul bar & restaurant in Sandy Ground, Saint Martin. Island flavors, DJ vibes, and community since 2017.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:wght@200;300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+    <script>
+    tailwind.config = {
+        theme: { extend: {
+            colors: { gold: { 300:'#f0d878', 400:'#e5c07b', 500:'#D4AF37', 600:'#b08d28', 700:'#8a6d1f' }, night:'#0a0a0a', deep:'#050505', tropical:'#0a1914' },
+            fontFamily: { serif:['Cinzel','serif'], sans:['Montserrat','sans-serif'], accent:['Cormorant Garamond','serif'] }
+        }}
+    }
+    </script>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: auto; }
+        body { background:#050505; color:#f3f4f6; overflow-x:hidden; font-family:'Montserrat',sans-serif; }
+        ::selection { background:#D4AF37; color:#0a0a0a; }
+        ::-webkit-scrollbar{width:6px} ::-webkit-scrollbar-track{background:#050505} ::-webkit-scrollbar-thumb{background:#D4AF37;border-radius:10px}
+
+        /* Loader */
+        .loader{position:fixed;inset:0;z-index:9999;background:#050505;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2rem}
+        .loader-bar{width:200px;height:1px;background:rgba(212,175,55,0.2);position:relative;overflow:hidden}
+        .loader-fill{position:absolute;left:0;top:0;height:100%;width:0;background:#D4AF37}
+        .loader-text{font-family:'Cinzel',serif;color:#D4AF37;font-size:0.7rem;letter-spacing:0.5em;text-transform:uppercase}
+
+        /* Noise grain overlay */
+        .noise{position:fixed;inset:0;pointer-events:none;z-index:9000;opacity:0.04;background-image:url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23n)"/%3E%3C/svg%3E')}
+
+        /* Glass nav */
+        .glass-nav{background:rgba(5,5,5,0.4);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(212,175,55,0.08);transition:all 0.6s cubic-bezier(0.16,1,0.3,1)}
+        .glass-nav.scrolled{background:rgba(5,5,5,0.85);border-bottom-color:rgba(212,175,55,0.15)}
+
+        /* Hero */
+        .hero-overlay{background:linear-gradient(180deg,rgba(5,5,5,0.45) 0%,rgba(5,5,5,0.15) 35%,rgba(5,5,5,0.55) 70%,#050505 100%)}
+        .hero-vignette{box-shadow:inset 0 0 200px 60px rgba(0,0,0,0.7)}
+        .gold-glow{text-shadow:0 0 60px rgba(212,175,55,0.3),0 0 120px rgba(212,175,55,0.1)}
+
+        /* Reveal animations */
+        .reveal-up{opacity:0;transform:translateY(80px)}
+        .reveal-left{opacity:0;transform:translateX(-80px)}
+        .reveal-right{opacity:0;transform:translateX(80px)}
+        .reveal-scale{opacity:0;transform:scale(0.85)}
+        .img-reveal{clip-path:inset(100% 0 0 0)}
+        .line-reveal{width:0}
+
+        /* Char animation */
+        .char-line{display:inline-block;transform:translateY(110%);opacity:0}
+
+        /* Parallax image */
+        .parallax-img{will-change:transform}
+
+        /* Magnetic button */
+        .magnetic-btn{position:relative;overflow:hidden;transition:transform 0.4s cubic-bezier(0.16,1,0.3,1)}
+        .magnetic-btn::before{content:'';position:absolute;inset:0;background:#D4AF37;transform:translateY(101%);transition:transform 0.5s cubic-bezier(0.16,1,0.3,1)}
+        .magnetic-btn:hover::before{transform:translateY(0)}
+        .magnetic-btn span{position:relative;z-index:1}
+        .magnetic-btn:hover span{color:#050505}
+
+        /* Mobile menu */
+        .mobile-menu{position:fixed;inset:0;background:rgba(5,5,5,0.98);z-index:998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;clip-path:circle(0% at calc(100% - 2.5rem) 2.5rem);transition:clip-path 0.8s cubic-bezier(0.16,1,0.3,1)}
+        .mobile-menu.open{clip-path:circle(150% at calc(100% - 2.5rem) 2.5rem)}
+
+        /* Section divider */
+        .section-line{height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,0.3),transparent)}
+
+        /* Marquee */
+        .marquee-track{display:flex;animation:marquee 40s linear infinite}
+        .marquee-track:hover{animation-play-state:paused}
+        @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+        /* Float */
+        @keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-20px) rotate(1deg)}}
+        @keyframes fadeInScale{0%{opacity:0;transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
+        .float{animation:float 8s ease-in-out infinite}
+
+        /* Scroll indicator */
+        @keyframes scrollLine{0%{transform:translateY(-100%)}100%{transform:translateY(200%)}}
+
+        /* Cursor follower */
+        .cursor-follower{position:fixed;width:20px;height:20px;border:1px solid rgba(212,175,55,0.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width 0.3s,height 0.3s,border-color 0.3s;mix-blend-mode:difference;display:none}
+        @media(hover:hover){.cursor-follower{display:block}}
+        .cursor-follower.hover{width:60px;height:60px;border-color:#D4AF37}
+
+        /* Values card */
+        .value-card{border:1px solid rgba(212,175,55,0.08);transition:border-color 0.5s,transform 0.5s cubic-bezier(0.16,1,0.3,1),background 0.5s}
+        .value-card:hover{border-color:rgba(212,175,55,0.25);transform:translateY(-8px);background:rgba(212,175,55,0.03)}
+
+        /* Team photo card */
+        .team-card{position:relative;overflow:hidden}
+        .team-card img{transition:transform 1.2s cubic-bezier(0.16,1,0.3,1)}
+        .team-card:hover img{transform:scale(1.06)}
+        .team-card .overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(5,5,5,0.92) 100%);opacity:0;transition:opacity 0.5s}
+        .team-card:hover .overlay{opacity:1}
+        .team-card .caption{position:absolute;bottom:0;left:0;right:0;padding:1.5rem;transform:translateY(20px);opacity:0;transition:all 0.5s cubic-bezier(0.16,1,0.3,1)}
+        .team-card:hover .caption{transform:translateY(0);opacity:1}
+
+        /* Timeline */
+        .timeline-line{background:linear-gradient(180deg,transparent,rgba(212,175,55,0.4),transparent)}
+        .timeline-dot{width:12px;height:12px;background:#D4AF37;border-radius:50%;position:relative;flex-shrink:0;box-shadow:0 0 20px rgba(212,175,55,0.4)}
+        .timeline-dot::before{content:'';position:absolute;inset:-4px;border:1px solid rgba(212,175,55,0.3);border-radius:50%}
+
+        /* CTA parallax */
+        .cta-overlay{background:linear-gradient(180deg,#050505 0%,rgba(5,5,5,0.5) 30%,rgba(5,5,5,0.5) 70%,#050505 100%)}
+
+        /* Stats */
+        .stat-sep{width:1px;background:linear-gradient(180deg,transparent,rgba(212,175,55,0.3),transparent)}
+
+        /* Glow orb */
+        .glow-orb{position:absolute;border-radius:50%;pointer-events:none;filter:blur(180px)}
+
+        /* ===== MOBILE RESPONSIVE ===== */
+        body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+        footer{padding-bottom:env(safe-area-inset-bottom)}
+        @supports(height:100dvh){.h-screen{height:100dvh}}
+        @media(max-width:374px){
+            .tracking-\[0\.5em\]{letter-spacing:0.25em}
+            .tracking-\[0\.3em\]{letter-spacing:0.15em}
+            .px-6{padding-left:1rem;padding-right:1rem}
+            .gap-12{gap:1.5rem}
+            .text-5xl{font-size:2rem}
+            .py-28{padding-top:4rem;padding-bottom:4rem}
+        }
+        @media(max-width:767px){
+            .reveal-up{transform:translateY(40px)}
+            .reveal-left{transform:translateX(-40px)}
+            .reveal-right{transform:translateX(40px)}
+            .magnetic-btn{min-height:48px;display:inline-flex;align-items:center;justify-content:center}
+            nav a,nav button{min-height:44px;min-width:44px;display:inline-flex;align-items:center}
+            .parallax-img{will-change:auto}
+            .grid.gap-12{gap:2rem}
+        }
+        @media(hover:none){
+            .magnetic-btn:hover::before{transform:translateY(101%)}
+            .value-card:hover{transform:none}
+            .cursor-follower{display:none!important}
+        }
+    </style>
+</head>
+<body>
+
+<!-- Cursor Follower -->
+<div class="cursor-follower" id="cursor"></div>
+
+<!-- Noise Grain -->
+<div class="noise"></div>
+
+<!-- Loader -->
+<div class="loader" id="loader">
+    <p class="loader-text">Triple R</p>
+    <div class="loader-bar"><div class="loader-fill" id="loaderFill"></div></div>
+</div>
+
+<!-- ==================== NAV ==================== -->
+<nav class="fixed w-full z-[100] glass-nav py-5 px-6 md:px-12 flex justify-between items-center" id="mainNav">
+    <a href="index.html" class="font-serif text-gold-500 text-xl tracking-[0.15em] font-bold uppercase">Triple R</a>
+    <ul class="hidden lg:flex items-center gap-10 text-[11px] tracking-[0.25em] uppercase font-medium text-gray-400">
+        <li><a href="index.html" class="hover:text-gold-500 transition-colors duration-300">Home</a></li>
+        <li><a href="about.html" class="text-gold-500">About</a></li>
+        <li><a href="menu.html" class="hover:text-gold-500 transition-colors duration-300">Menu</a></li>
+        <li><a href="reservations.html" class="hover:text-gold-500 transition-colors duration-300">Reservations</a></li>
+        <li><a href="ambiance.html" class="hover:text-gold-500 transition-colors duration-300">Ambiance</a></li>
+        <li><a href="blog.html" class="hover:text-gold-500 transition-colors duration-300">Blog</a></li>
+    </ul>
+    <a href="reservations.html" class="hidden lg:block magnetic-btn border border-gold-500 text-gold-500 px-7 py-3 text-[10px] tracking-[0.3em] uppercase font-semibold"><span>Reserve</span></a>
+    <button class="lg:hidden text-gold-500 z-[999] relative" id="menuToggle" aria-label="Menu">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <line x1="3" y1="6" x2="21" y2="6" id="line1" style="transition:all 0.4s"/>
+            <line x1="3" y1="12" x2="21" y2="12" id="line2" style="transition:all 0.4s"/>
+            <line x1="3" y1="18" x2="21" y2="18" id="line3" style="transition:all 0.4s"/>
+        </svg>
+    </button>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <a href="index.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest">Home</a>
+    <a href="about.html" class="font-serif text-3xl text-gold-500 tracking-widest">About</a>
+    <a href="menu.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest">Menu</a>
+    <a href="reservations.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest">Reservations</a>
+    <a href="ambiance.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest">Ambiance</a>
+    <a href="blog.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest">Blog</a>
+    <div class="mt-8">
+        <a href="reservations.html" class="border border-gold-500 text-gold-500 px-10 py-4 text-xs tracking-[0.3em] uppercase hover:bg-gold-500 hover:text-night transition-all">Reserve a Table</a>
+    </div>
+</div>
+
+<!-- ==================== HERO ==================== -->
+<section class="relative h-screen w-full flex items-center justify-center overflow-hidden" id="hero">
+    <div class="absolute inset-0 z-0">
+        <img src="pictures & videos/Real.pic.Triple R Bar Restaurant.png" alt="Triple R Bar exterior" class="absolute inset-0 w-full h-full object-cover parallax-img" id="heroBg">
+        <div class="absolute inset-0 hero-overlay z-[1]"></div>
+        <div class="absolute inset-0 hero-vignette z-[2]"></div>
+    </div>
+
+    <!-- Cinematic letterbox bars -->
+    <div class="absolute top-0 left-0 right-0 h-[8vh] bg-deep z-[3] origin-top" id="cinemaTop"></div>
+    <div class="absolute bottom-0 left-0 right-0 h-[8vh] bg-deep z-[3] origin-bottom" id="cinemaBot"></div>
+
+    <!-- Content -->
+    <div class="relative z-10 text-center px-4">
+        <p class="font-sans text-gold-500 tracking-[0.6em] uppercase text-xs md:text-sm mb-8 reveal-up" id="heroSub">Sandy Ground, Saint Martin</p>
+        <h1 class="font-serif text-7xl sm:text-8xl md:text-[9rem] lg:text-[11rem] font-bold text-white leading-[0.85] gold-glow mb-6" id="heroTitle">
+            <span class="block overflow-hidden"><span class="char-line block">ABOUT</span></span>
+            <span class="block overflow-hidden"><span class="char-line block text-gold-500">US</span></span>
+        </h1>
+        <div class="flex items-center justify-center gap-6 mb-8 reveal-up" id="heroDivider">
+            <div class="w-16 md:w-24 h-[1px] bg-gold-500/50"></div>
+            <p class="font-accent text-xl md:text-2xl text-gray-300 italic tracking-wide">Our Story</p>
+            <div class="w-16 md:w-24 h-[1px] bg-gold-500/50"></div>
+        </div>
+        <p class="font-sans text-gray-400 tracking-[0.35em] text-[10px] md:text-xs uppercase reveal-up" id="heroTag">Born from the island. Built on soul.</p>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-16 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center reveal-up" id="scrollHint">
+        <span class="text-[10px] tracking-[0.4em] uppercase text-gold-500/60 mb-4">Scroll</span>
+        <div class="w-[1px] h-12 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gold-500/30"></div>
+            <div class="absolute top-0 w-full h-1/2 bg-gold-500" style="animation:scrollLine 2s ease-in-out infinite"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== MARQUEE ==================== -->
+<div class="py-6 border-y border-gold-500/10 overflow-hidden bg-deep">
+    <div class="marquee-track">
+        <div class="flex items-center gap-8 shrink-0 px-4">
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Caribbean Soul</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Founded 2017</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Sandy Ground</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Island Culture</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Authentic Flavors</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Community Spirit</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Good Vibes</span>
+            <span class="text-gold-700">&#9670;</span>
+        </div>
+        <div class="flex items-center gap-8 shrink-0 px-4" aria-hidden="true">
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Caribbean Soul</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Founded 2017</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Sandy Ground</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Island Culture</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Authentic Flavors</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Community Spirit</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Good Vibes</span>
+            <span class="text-gold-700">&#9670;</span>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== ORIGIN STORY ==================== -->
+<section class="py-28 md:py-44 relative overflow-hidden" id="origin">
+    <div class="glow-orb w-[600px] h-[600px] bg-gold-600/5 top-1/2 -left-60 -translate-y-1/2"></div>
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+        <div class="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+
+            <!-- Text column -->
+            <div class="w-full lg:w-5/12 space-y-8 z-10">
+                <div class="flex items-center gap-4 reveal-up">
+                    <div class="w-12 h-[1px] bg-gold-500 line-reveal"></div>
+                    <p class="text-gold-500 tracking-[0.3em] uppercase text-[10px] font-semibold">The Origin</p>
+                </div>
+                <h2 class="font-serif text-4xl md:text-5xl lg:text-6xl text-white leading-tight reveal-up">
+                    Where the Island<br>
+                    <span class="font-accent italic text-gold-400">Comes Alive</span>
+                </h2>
+                <p class="text-gray-400 font-light leading-relaxed text-sm md:text-base reveal-up">
+                    Triple R Bar Restaurant was born in 2017 in the heart of Sandy Ground, just after the bridge — the soul of Saint Martin's most vibrant village. It began with a simple but powerful vision: create a space where the true spirit of the Caribbean could breathe, gather, and celebrate.
+                </p>
+                <p class="text-gray-500 font-light leading-relaxed text-sm md:text-base reveal-up">
+                    The founders — deeply rooted in island culture — wanted more than a restaurant. They envisioned a living room for the community. A place where the smell of authentic Caribbean cooking mingles with the bass of a DJ set as the sun melts into the lagoon. Where locals and visitors sit side by side, strangers become friends, and every evening feels like a celebration.
+                </p>
+                <p class="text-gray-500 font-light leading-relaxed text-sm md:text-base reveal-up">
+                    From the very first night, Triple R became something the island had been waiting for. A space that did not try to imitate anywhere else — rooted entirely in Saint Martin's own flavors, rhythms, and warmth.
+                </p>
+                <div class="flex items-center gap-6 pt-4 reveal-up">
+                    <a href="reservations.html" class="magnetic-btn border border-gold-500 text-gold-500 px-8 py-4 text-[10px] tracking-[0.3em] uppercase font-semibold"><span>Reserve a Table</span></a>
+                    <a href="menu.html" class="text-gray-400 text-[10px] tracking-[0.2em] uppercase hover:text-gold-500 transition-colors">Explore Menu &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Video column -->
+            <div class="w-full lg:w-7/12 relative">
+                <div class="relative aspect-[4/5] md:aspect-[3/4] lg:aspect-[4/5] overflow-hidden rounded-sm img-reveal" id="originImg">
+                    <video src="pictures & videos/Video.About us Triple R bar restaurant.mp4" autoplay muted loop playsinline class="w-full h-full object-cover parallax-img" style="animation: fadeInScale 1.2s ease-out forwards"></video>
+                    <!-- Floating accent label -->
+                    <div class="absolute top-8 left-8 border border-gold-500/30 bg-deep/70 backdrop-blur-sm px-5 py-3 reveal-scale" id="originLabel">
+                        <p class="font-serif text-gold-500 text-xs tracking-[0.3em] uppercase">Sandy Ground</p>
+                        <p class="font-accent italic text-white/60 text-xs mt-1">Saint Martin 97150</p>
+                    </div>
+                </div>
+                <!-- Decorative second image -->
+                <div class="absolute -bottom-10 -right-6 md:-right-10 w-2/5 aspect-square overflow-hidden border-2 border-deep img-reveal" id="originImg2" style="clip-path:inset(100% 0 0 0)">
+                    <img src="pictures & videos/chill out spot. triple r bar restaurant.jpeg" alt="Chill spot at Triple R" class="w-full h-full object-cover parallax-img">
+                </div>
+                <!-- Gold accent line -->
+                <div class="absolute top-1/2 -left-6 w-[1px] h-32 bg-gradient-to-b from-transparent via-gold-500/40 to-transparent hidden lg:block"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== STATS BAR ==================== -->
+<div class="py-16 border-y border-gold-500/10 bg-night" id="stats">
+    <div class="max-w-5xl mx-auto px-6 md:px-12">
+        <div class="flex flex-col md:flex-row items-center justify-center gap-0">
+
+            <div class="flex flex-col items-center px-12 py-6 reveal-scale">
+                <span class="font-serif text-5xl text-gold-500 gold-glow counter" data-target="5">0+</span>
+                <span class="text-gray-500 text-[10px] tracking-[0.3em] uppercase mt-3 font-medium">Years of Soul</span>
+            </div>
+
+            <div class="stat-sep h-20 hidden md:block"></div>
+
+            <div class="flex flex-col items-center px-12 py-6 reveal-scale">
+                <span class="font-serif text-5xl text-gold-500 gold-glow counter" data-target="40">0+</span>
+                <span class="text-gray-500 text-[10px] tracking-[0.3em] uppercase mt-3 font-medium">Menu Items</span>
+            </div>
+
+            <div class="stat-sep h-20 hidden md:block"></div>
+
+            <div class="flex flex-col items-center px-12 py-6 reveal-scale">
+                <span class="font-serif text-5xl text-gold-500 gold-glow counter" data-target="200">0+</span>
+                <span class="text-gray-500 text-[10px] tracking-[0.3em] uppercase mt-3 font-medium">Weekly Guests</span>
+            </div>
+
+            <div class="stat-sep h-20 hidden md:block"></div>
+
+            <div class="flex flex-col items-center px-12 py-6 reveal-scale">
+                <span class="font-serif text-5xl text-gold-500 gold-glow">1</span>
+                <span class="text-gray-500 text-[10px] tracking-[0.3em] uppercase mt-3 font-medium">Island. One Vibe.</span>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ==================== VALUES ==================== -->
+<section class="py-28 md:py-44 relative overflow-hidden" id="values">
+    <div class="glow-orb w-[700px] h-[700px] bg-gold-600/4 top-1/2 right-0 translate-x-1/2 -translate-y-1/2"></div>
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+
+        <!-- Header -->
+        <div class="text-center mb-20 space-y-5">
+            <div class="flex items-center justify-center gap-4 reveal-up">
+                <div class="w-12 h-[1px] bg-gold-500/50 line-reveal"></div>
+                <p class="text-gold-500 tracking-[0.3em] uppercase text-[10px] font-semibold">What We Stand For</p>
+                <div class="w-12 h-[1px] bg-gold-500/50 line-reveal"></div>
+            </div>
+            <h2 class="font-serif text-4xl md:text-6xl text-white reveal-up">Three <span class="font-accent italic text-gold-400">Pillars</span></h2>
+            <p class="font-accent italic text-gray-500 text-lg md:text-xl max-w-xl mx-auto reveal-up">The foundations that make Triple R what it is</p>
+        </div>
+
+        <!-- Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+
+            <!-- Pillar 1: Authentic Flavors -->
+            <div class="value-card bg-night/50 p-10 md:p-12 reveal-up" id="pillar1">
+                <div class="mb-8">
+                    <!-- Icon: Fork & Flame -->
+                    <svg class="w-10 h-10 text-gold-500 mb-6" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M8 6v10c0 4.4 3.6 8 8 8v18"/>
+                        <path d="M16 6v36"/>
+                        <path d="M32 6c0 0-2 4-2 9s4 9 4 9v18"/>
+                        <path d="M36 6v10"/>
+                    </svg>
+                    <div class="w-8 h-[1px] bg-gold-600/60 mb-6"></div>
+                    <h3 class="font-serif text-2xl text-white mb-4 tracking-wide">Authentic<br>Flavors</h3>
+                    <p class="text-gray-500 font-light leading-relaxed text-sm">
+                        Every dish at Triple R is a love letter to the Caribbean. We cook with the ingredients, techniques, and soul passed down through generations. From creole seasoning to slow-cooked oxtail — nothing here is an imitation.
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-4 h-[1px] bg-gold-500/40"></div>
+                    <span class="text-gold-600 text-[10px] tracking-[0.3em] uppercase font-medium">Caribbean Cuisine</span>
+                </div>
+            </div>
+
+            <!-- Pillar 2: Island Vibes -->
+            <div class="value-card bg-night/50 p-10 md:p-12 reveal-up md:translate-y-10" id="pillar2">
+                <div class="mb-8">
+                    <!-- Icon: Music waves -->
+                    <svg class="w-10 h-10 text-gold-500 mb-6" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+                        <path d="M6 28c0 0 4-12 10-12s8 16 14 16 10-12 12-12"/>
+                        <circle cx="38" cy="36" r="2" fill="currentColor" stroke="none"/>
+                        <path d="M36 20v16"/>
+                        <path d="M36 20l8-4v12"/>
+                    </svg>
+                    <div class="w-8 h-[1px] bg-gold-600/60 mb-6"></div>
+                    <h3 class="font-serif text-2xl text-white mb-4 tracking-wide">Island<br>Vibes</h3>
+                    <p class="text-gray-500 font-light leading-relaxed text-sm">
+                        Music is the heartbeat of Triple R. Our DJ sets are carefully curated to move you — Afrobeats, Dancehall, Zouk, R&amp;B — the sounds of the diaspora woven into every Friday and Saturday night. The atmosphere is effortlessly cool, always warm.
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-4 h-[1px] bg-gold-500/40"></div>
+                    <span class="text-gold-600 text-[10px] tracking-[0.3em] uppercase font-medium">DJ Sessions &amp; Atmosphere</span>
+                </div>
+            </div>
+
+            <!-- Pillar 3: Community -->
+            <div class="value-card bg-night/50 p-10 md:p-12 reveal-up" id="pillar3">
+                <div class="mb-8">
+                    <!-- Icon: People -->
+                    <svg class="w-10 h-10 text-gold-500 mb-6" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="18" cy="14" r="6"/>
+                        <path d="M4 40c0-7.7 6.3-14 14-14s14 6.3 14 14"/>
+                        <circle cx="36" cy="16" r="5"/>
+                        <path d="M36 28c4.4 0 8 3.6 8 8"/>
+                    </svg>
+                    <div class="w-8 h-[1px] bg-gold-600/60 mb-6"></div>
+                    <h3 class="font-serif text-2xl text-white mb-4 tracking-wide">Community<br>&amp; Welcome</h3>
+                    <p class="text-gray-500 font-light leading-relaxed text-sm">
+                        Triple R was built for everyone. Locals who grew up on this island, visitors discovering it for the first time, long-time friends and new faces. The table is always open. Here, you are not a customer — you are a guest, and every guest becomes part of the family.
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-4 h-[1px] bg-gold-500/40"></div>
+                    <span class="text-gold-600 text-[10px] tracking-[0.3em] uppercase font-medium">For Locals &amp; Visitors</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ==================== SECTION DIVIDER ==================== -->
+<div class="section-line mx-12"></div>
+
+<!-- ==================== TEAM / PEOPLE ==================== -->
+<section class="py-28 md:py-44 relative overflow-hidden" id="team">
+    <div class="glow-orb w-[500px] h-[500px] bg-gold-600/5 bottom-0 -left-40"></div>
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+
+        <!-- Header -->
+        <div class="mb-20 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+            <div class="space-y-5">
+                <div class="flex items-center gap-4 reveal-up">
+                    <div class="w-12 h-[1px] bg-gold-500 line-reveal"></div>
+                    <p class="text-gold-500 tracking-[0.3em] uppercase text-[10px] font-semibold">The People</p>
+                </div>
+                <h2 class="font-serif text-4xl md:text-6xl text-white reveal-up">Faces Behind<br><span class="font-accent italic text-gold-400">the Magic</span></h2>
+            </div>
+            <p class="text-gray-500 font-light text-sm md:text-base max-w-xs leading-relaxed reveal-up">
+                Every great experience is made by the hands and hearts behind the scenes. Meet the people who make Triple R what it is.
+            </p>
+        </div>
+
+        <!-- Photo grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+
+            <!-- Card 1 — Bartender (large) -->
+            <div class="team-card lg:col-span-2 aspect-[16/9] lg:aspect-[16/8] rounded-sm overflow-hidden img-reveal">
+                <img src="pictures & videos/happy.bartender.jpeg" alt="Our bartender" class="w-full h-full object-cover">
+                <div class="overlay"></div>
+                <div class="caption">
+                    <p class="font-serif text-white text-lg mb-1">Behind the Bar</p>
+                    <p class="text-gold-500 text-[10px] tracking-[0.3em] uppercase">Cocktails &amp; Good Energy</p>
+                </div>
+            </div>
+
+            <!-- Card 2 — Client chilling -->
+            <div class="team-card aspect-square rounded-sm overflow-hidden img-reveal">
+                <img src="pictures & videos/client chilling at the bar.jpeg" alt="Guest at Triple R" class="w-full h-full object-cover">
+                <div class="overlay"></div>
+                <div class="caption">
+                    <p class="font-serif text-white text-lg mb-1">In the Moment</p>
+                    <p class="text-gold-500 text-[10px] tracking-[0.3em] uppercase">Guests &amp; Atmosphere</p>
+                </div>
+            </div>
+
+            <!-- Card 3 — Couple at the bar -->
+            <div class="team-card aspect-square rounded-sm overflow-hidden img-reveal">
+                <img src="pictures & videos/a nice couple chilling by the bar.jpeg" alt="A nice couple chilling by the bar" class="w-full h-full object-cover object-top">
+                <div class="overlay"></div>
+                <div class="caption">
+                    <p class="font-serif text-white text-lg mb-1">Good Vibes</p>
+                    <p class="text-gold-500 text-[10px] tracking-[0.3em] uppercase">The Bar Experience</p>
+                </div>
+            </div>
+
+            <!-- Card 4 — Inside look (large) -->
+            <div class="team-card lg:col-span-2 aspect-[16/9] lg:aspect-[16/8] rounded-sm overflow-hidden img-reveal">
+                <img src="pictures & videos/look inside triple r bar restaurant.jpeg" alt="Inside Triple R" class="w-full h-full object-cover">
+                <div class="overlay"></div>
+                <div class="caption">
+                    <p class="font-serif text-white text-lg mb-1">The Space</p>
+                    <p class="text-gold-500 text-[10px] tracking-[0.3em] uppercase">Where It All Happens</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Quote -->
+        <div class="mt-20 text-center reveal-up">
+            <div class="inline-block border-t border-b border-gold-500/20 py-8 px-4">
+                <p class="font-accent italic text-2xl md:text-3xl text-white/80 max-w-2xl mx-auto leading-relaxed">
+                    "We didn't build a restaurant. We built a gathering place — somewhere the island could find itself every night."
+                </p>
+                <p class="text-gold-500 text-[10px] tracking-[0.4em] uppercase mt-6 font-medium">The Founders, Triple R</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ==================== TIMELINE ==================== -->
+<section class="py-28 md:py-44 bg-night relative overflow-hidden" id="timeline">
+    <div class="glow-orb w-[600px] h-[600px] bg-gold-600/4 top-1/2 -right-60 -translate-y-1/2"></div>
+    <div class="max-w-4xl mx-auto px-6 md:px-12">
+
+        <!-- Header -->
+        <div class="text-center mb-20 space-y-5">
+            <div class="flex items-center justify-center gap-4 reveal-up">
+                <div class="w-12 h-[1px] bg-gold-500/50 line-reveal"></div>
+                <p class="text-gold-500 tracking-[0.3em] uppercase text-[10px] font-semibold">Our Journey</p>
+                <div class="w-12 h-[1px] bg-gold-500/50 line-reveal"></div>
+            </div>
+            <h2 class="font-serif text-4xl md:text-6xl text-white reveal-up">The <span class="font-accent italic text-gold-400">Timeline</span></h2>
+        </div>
+
+        <!-- Timeline items -->
+        <div class="relative">
+            <!-- Vertical line -->
+            <div class="absolute left-6 md:left-1/2 top-0 bottom-0 w-[1px] timeline-line md:-translate-x-1/2"></div>
+
+            <!-- 2017 -->
+            <div class="relative flex items-start gap-8 md:gap-0 mb-16 reveal-up" id="tl1">
+                <div class="relative z-10 flex items-center justify-center md:absolute md:left-1/2 md:-translate-x-1/2 md:top-0">
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="md:w-1/2 md:pr-16 md:text-right pl-8 md:pl-0">
+                    <span class="font-serif text-gold-500 text-3xl md:text-4xl block mb-2">2017</span>
+                    <h3 class="font-serif text-xl text-white mb-3">The Beginning</h3>
+                    <p class="text-gray-500 font-light text-sm leading-relaxed">Triple R opens its doors in Sandy Ground, just after the bridge. A humble space with a big dream — bring the true soul of the Caribbean to a single table.</p>
+                </div>
+                <div class="hidden md:block md:w-1/2 md:pl-16"></div>
+            </div>
+
+            <!-- 2021 -->
+            <div class="relative flex items-start gap-8 md:gap-0 mb-16 reveal-up" id="tl2">
+                <div class="relative z-10 flex items-center justify-center md:absolute md:left-1/2 md:-translate-x-1/2 md:top-0">
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="hidden md:block md:w-1/2 md:pr-16"></div>
+                <div class="md:w-1/2 md:pl-16 pl-8 md:pl-16">
+                    <span class="font-serif text-gold-500 text-3xl md:text-4xl block mb-2">2021</span>
+                    <h3 class="font-serif text-xl text-white mb-3">First DJ Nights</h3>
+                    <p class="text-gray-500 font-light text-sm leading-relaxed">The terrace fills up every Friday. Weekly DJ sets launch, turning Triple R from a restaurant into an event. The island starts talking.</p>
+                </div>
+            </div>
+
+            <!-- 2022 -->
+            <div class="relative flex items-start gap-8 md:gap-0 mb-16 reveal-up" id="tl3">
+                <div class="relative z-10 flex items-center justify-center md:absolute md:left-1/2 md:-translate-x-1/2 md:top-0">
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="md:w-1/2 md:pr-16 md:text-right pl-8 md:pl-0">
+                    <span class="font-serif text-gold-500 text-3xl md:text-4xl block mb-2">2022</span>
+                    <h3 class="font-serif text-xl text-white mb-3">Menu Expansion</h3>
+                    <p class="text-gray-500 font-light text-sm leading-relaxed">The kitchen deepens its roots. New creole dishes, a cocktail menu developed in-house, and weekend brunch become instant island favorites.</p>
+                </div>
+                <div class="hidden md:block md:w-1/2 md:pl-16"></div>
+            </div>
+
+            <!-- 2023 -->
+            <div class="relative flex items-start gap-8 md:gap-0 mb-16 reveal-up" id="tl4">
+                <div class="relative z-10 flex items-center justify-center md:absolute md:left-1/2 md:-translate-x-1/2 md:top-0">
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="hidden md:block md:w-1/2 md:pr-16"></div>
+                <div class="md:w-1/2 md:pl-16 pl-8 md:pl-16">
+                    <span class="font-serif text-gold-500 text-3xl md:text-4xl block mb-2">2023</span>
+                    <h3 class="font-serif text-xl text-white mb-3">Sandy Ground's Spot</h3>
+                    <p class="text-gray-500 font-light text-sm leading-relaxed">Triple R earns its title as the go-to spot in Sandy Ground. Word spreads beyond the island — travelers plan visits to Saint Martin around a night here.</p>
+                </div>
+            </div>
+
+            <!-- 2024 -->
+            <div class="relative flex items-start gap-8 md:gap-0 mb-16 reveal-up" id="tl5">
+                <div class="relative z-10 flex items-center justify-center md:absolute md:left-1/2 md:-translate-x-1/2 md:top-0">
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="md:w-1/2 md:pr-16 md:text-right pl-8 md:pl-0">
+                    <span class="font-serif text-gold-500 text-3xl md:text-4xl block mb-2">2024</span>
+                    <h3 class="font-serif text-xl text-white mb-3">Renovation &amp; Reinvention</h3>
+                    <p class="text-gray-500 font-light text-sm leading-relaxed">A full interior renovation reimagines the space. New lighting, refined decor, and an expanded bar elevate the experience without losing the soul that made it.</p>
+                </div>
+                <div class="hidden md:block md:w-1/2 md:pl-16"></div>
+            </div>
+
+            <!-- 2025–2026 -->
+            <div class="relative flex items-start gap-8 md:gap-0 reveal-up" id="tl6">
+                <div class="relative z-10 flex items-center justify-center md:absolute md:left-1/2 md:-translate-x-1/2 md:top-0">
+                    <div class="timeline-dot" style="background:#e5c07b;box-shadow:0 0 30px rgba(229,192,123,0.6)"></div>
+                </div>
+                <div class="hidden md:block md:w-1/2 md:pr-16"></div>
+                <div class="md:w-1/2 md:pl-16 pl-8 md:pl-16">
+                    <span class="font-serif text-gold-400 text-3xl md:text-4xl block mb-2">2025 — Now</span>
+                    <h3 class="font-serif text-xl text-white mb-3">A New Generation</h3>
+                    <p class="text-gray-500 font-light text-sm leading-relaxed">The story continues. Triple R grows into its next chapter — new events, new collaborations, and the same unwavering commitment to island authenticity. The best is still ahead.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ==================== GALLERY STRIP ==================== -->
+<div class="py-0 overflow-hidden" id="galleryStrip">
+    <div class="flex gap-3" id="stripTrack">
+        <div class="shrink-0 w-56 sm:w-72 md:w-96 aspect-[4/5] overflow-hidden img-reveal">
+            <img src="pictures & videos/look inside triple r bar restaurant.jpeg" alt="Inside Triple R" class="w-full h-full object-cover parallax-img">
+        </div>
+        <div class="shrink-0 w-56 sm:w-72 md:w-96 aspect-[4/5] overflow-hidden img-reveal" style="margin-top:3rem">
+            <img src="pictures & videos/insideLook.TripleRBar.jpeg" alt="Nice inside view" class="w-full h-full object-cover parallax-img">
+        </div>
+        <div class="shrink-0 w-56 sm:w-72 md:w-96 aspect-[4/5] overflow-hidden img-reveal">
+            <img src="pictures & videos/chilling.pic.triple.Rbarrestaurant.jpeg" alt="Chilling at Triple R" class="w-full h-full object-cover parallax-img">
+        </div>
+        <div class="shrink-0 w-56 sm:w-72 md:w-96 aspect-[4/5] overflow-hidden img-reveal" style="margin-top:3rem">
+            <img src="pictures & videos/chill out spot. triple r bar restaurant.jpeg" alt="Chill out spot" class="w-full h-full object-cover parallax-img">
+        </div>
+        <div class="shrink-0 w-56 sm:w-72 md:w-96 aspect-[4/5] overflow-hidden img-reveal">
+            <img src="pictures & videos/Real.pic.Triple R Bar Restaurant.png" alt="Triple R Bar Restaurant" class="w-full h-full object-cover parallax-img">
+        </div>
+    </div>
+</div>
+
+<!-- ==================== CTA ==================== -->
+<section class="relative min-h-[85vh] flex items-center justify-center overflow-hidden" id="cta">
+    <!-- Parallax background -->
+    <div class="absolute inset-0 z-0">
+        <img src="pictures & videos/look inside triple r bar restaurant.jpeg" alt="Triple R atmosphere" class="absolute inset-0 w-full h-full object-cover parallax-img" id="ctaBg">
+        <div class="absolute inset-0 cta-overlay z-[1]"></div>
+        <div class="absolute inset-0 hero-vignette z-[2]"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 text-center px-6 max-w-3xl mx-auto">
+        <div class="flex items-center justify-center gap-4 mb-8 reveal-up">
+            <div class="w-12 h-[1px] bg-gold-500/50"></div>
+            <p class="text-gold-500 tracking-[0.3em] uppercase text-[10px] font-semibold">Come Experience It</p>
+            <div class="w-12 h-[1px] bg-gold-500/50"></div>
+        </div>
+        <h2 class="font-serif text-5xl md:text-7xl lg:text-8xl text-white gold-glow leading-tight mb-6 reveal-up">
+            Be Part of<br><span class="font-accent italic text-gold-400">the Story</span>
+        </h2>
+        <p class="text-gray-400 font-light text-sm md:text-base leading-relaxed mb-12 max-w-lg mx-auto reveal-up">
+            The best way to understand Triple R is to sit down, order something cold, let the music wash over you, and simply be present. We'll take care of the rest.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center reveal-up">
+            <a href="reservations.html" class="magnetic-btn bg-gold-500 text-deep px-12 py-5 text-[10px] tracking-[0.3em] uppercase font-bold inline-block"><span>Reserve a Table</span></a>
+            <a href="menu.html" class="magnetic-btn border border-white/20 text-white px-12 py-5 text-[10px] tracking-[0.3em] uppercase font-semibold inline-block"><span>View the Menu</span></a>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="border-t border-gold-500/10 bg-deep">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 py-20">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-16">
+            <div class="md:col-span-2">
+                <h3 class="font-serif text-3xl text-white mb-4">Triple R</h3>
+                <p class="text-gray-500 font-light text-sm leading-relaxed max-w-md">The heart of Sandy Ground. Caribbean cuisine, craft cocktails, and unforgettable vibes on the island of Saint Martin.</p>
+                <div class="flex gap-4 mt-6">
+                    <a href="#" class="w-10 h-10 border border-gold-500/20 flex items-center justify-center text-gold-500 hover:bg-gold-500 hover:text-deep transition-all rounded-sm" aria-label="Instagram">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                    </a>
+                    <a href="#" class="w-10 h-10 border border-gold-500/20 flex items-center justify-center text-gold-500 hover:bg-gold-500 hover:text-deep transition-all rounded-sm" aria-label="Facebook">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </a>
+                    <a href="#" class="w-10 h-10 border border-gold-500/20 flex items-center justify-center text-gold-500 hover:bg-gold-500 hover:text-deep transition-all rounded-sm" aria-label="TikTok">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-serif text-gold-500 text-sm tracking-widest uppercase mb-6">Navigate</h4>
+                <ul class="space-y-3">
+                    <li><a href="index.html" class="text-gray-400 text-sm hover:text-gold-500 transition-colors">Home</a></li>
+                    <li><a href="about.html" class="text-gold-500 text-sm">About Us</a></li>
+                    <li><a href="menu.html" class="text-gray-400 text-sm hover:text-gold-500 transition-colors">Menu</a></li>
+                    <li><a href="reservations.html" class="text-gray-400 text-sm hover:text-gold-500 transition-colors">Reservations</a></li>
+                    <li><a href="ambiance.html" class="text-gray-400 text-sm hover:text-gold-500 transition-colors">Ambiance</a></li>
+                    <li><a href="blog.html" class="text-gray-400 text-sm hover:text-gold-500 transition-colors">Blog</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-serif text-gold-500 text-sm tracking-widest uppercase mb-6">Visit Us</h4>
+                <ul class="space-y-3 text-gray-400 text-sm font-light">
+                    <li>Sandy Ground<br>Saint Martin 97150</li>
+                    <li class="pt-2">Tue — Sun<br>8:00 AM &mdash; 2:00 AM</li>
+                    <li class="pt-2">Weekend DJ Sessions<br>8:30 PM &mdash; Late</li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gold-500/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-gray-600 text-xs tracking-wider">&copy; 2026 Triple R Bar Restaurant. All rights reserved.</p>
+            <p class="text-gray-700 text-[10px] tracking-wider uppercase">Designed with island soul</p>
+        </div>
+    </div>
+</footer>
+
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+// ========== LOADER ==========
+const loaderFill = document.getElementById('loaderFill');
+const loader = document.getElementById('loader');
+let progress = 0;
+const loaderInterval = setInterval(() => {
+    progress += Math.random() * 15 + 5;
+    if (progress >= 100) { progress = 100; clearInterval(loaderInterval); }
+    loaderFill.style.width = progress + '%';
+    if (progress >= 100) {
+        setTimeout(() => {
+            gsap.to(loader, {
+                opacity: 0, duration: 0.8, ease: 'power2.inOut',
+                onComplete: () => {
+                    loader.style.display = 'none';
+                    animateHero();
+                }
+            });
+        }, 400);
+    }
+}, 120);
+
+// ========== CUSTOM CURSOR ==========
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('a, button, .magnetic-btn, .team-card, .value-card').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+});
+
+// ========== MOBILE MENU ==========
+const menuToggle = document.getElementById('menuToggle');
+const mobileMenu = document.getElementById('mobileMenu');
+let menuOpen = false;
+menuToggle.addEventListener('click', () => {
+    menuOpen = !menuOpen;
+    mobileMenu.classList.toggle('open', menuOpen);
+});
+mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => { menuOpen = false; mobileMenu.classList.remove('open'); });
+});
+
+// ========== NAV SCROLL ==========
+const mainNav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+    mainNav.classList.toggle('scrolled', window.scrollY > 80);
+});
+
+// ========== GSAP REGISTER ==========
+gsap.registerPlugin(ScrollTrigger);
+
+// ========== HERO ANIMATION ==========
+function animateHero() {
+    const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+    tl.to('#cinemaTop', { scaleY: 0, duration: 1.2, delay: 0.2 })
+      .to('#cinemaBot', { scaleY: 0, duration: 1.2 }, '<')
+      .from('.char-line', { yPercent: 110, opacity: 0, duration: 1.4, stagger: 0.2, ease: 'expo.out' }, '-=0.8')
+      .to('#heroSub',     { opacity: 1, y: 0, duration: 1 }, '-=0.8')
+      .to('#heroDivider', { opacity: 1, y: 0, duration: 1 }, '-=0.7')
+      .to('#heroTag',     { opacity: 1, y: 0, duration: 1 }, '-=0.6')
+      .to('#scrollHint',  { opacity: 1, y: 0, duration: 1 }, '-=0.5');
+
+    // Hero BG parallax
+    gsap.to('#heroBg', {
+        yPercent: 20,
+        ease: 'none',
+        scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1 }
+    });
+}
+
+// ========== SCROLL ANIMATIONS ==========
+function initScrollAnimations() {
+
+    // Reveal up — all .reveal-up elements
+    gsap.utils.toArray('.reveal-up').forEach(el => {
+        gsap.to(el, {
+            opacity: 1, y: 0, duration: 1.2, ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+        });
+    });
+
+    // Image clipPath reveals
+    gsap.utils.toArray('.img-reveal').forEach(el => {
+        gsap.to(el, {
+            clipPath: 'inset(0% 0 0 0)', duration: 1.6, ease: 'power4.inOut',
+            scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' }
+        });
+    });
+
+    // Reveal scale
+    gsap.utils.toArray('.reveal-scale').forEach(el => {
+        gsap.to(el, {
+            opacity: 1, scale: 1, duration: 1.2, ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+        });
+    });
+
+    // Line reveals
+    gsap.utils.toArray('.line-reveal').forEach(el => {
+        gsap.to(el, {
+            width: '3rem', duration: 1.2, ease: 'power2.out',
+            scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+        });
+    });
+
+    // Parallax images (non-hero) — disabled on mobile for performance
+    if (window.innerWidth > 767) {
+        gsap.utils.toArray('.parallax-img').forEach(img => {
+            if (img.id === 'heroBg') return;
+            gsap.to(img, {
+                yPercent: -12,
+                ease: 'none',
+                scrollTrigger: { trigger: img.closest('div, section') || img.parentElement, start: 'top bottom', end: 'bottom top', scrub: 1 }
+            });
+        });
+    }
+
+    // CTA background parallax
+    gsap.to('#ctaBg', {
+        yPercent: 15,
+        ease: 'none',
+        scrollTrigger: { trigger: '#cta', start: 'top bottom', end: 'bottom top', scrub: 1 }
+    });
+
+    // Counters
+    document.querySelectorAll('.counter[data-target]').forEach(counter => {
+        const target = parseInt(counter.dataset.target);
+        const suffix = counter.textContent.replace(/\d+/, '').trim();
+        ScrollTrigger.create({
+            trigger: counter,
+            start: 'top 85%',
+            onEnter: () => {
+                gsap.to({ val: 0 }, {
+                    val: target,
+                    duration: 2.2,
+                    ease: 'power2.out',
+                    onUpdate: function() {
+                        counter.textContent = Math.round(this.targets()[0].val) + '+';
+                    }
+                });
+            },
+            once: true
+        });
+    });
+
+    // Staggered timeline items reveal
+    const tlItems = ['#tl1','#tl2','#tl3','#tl4','#tl5','#tl6'];
+    tlItems.forEach(id => {
+        gsap.fromTo(id,
+            { opacity: 0, x: -40 },
+            {
+                opacity: 1, x: 0, duration: 1, ease: 'power3.out',
+                scrollTrigger: { trigger: id, start: 'top 88%', toggleActions: 'play none none none' }
+            }
+        );
+    });
+
+    // Values cards stagger
+    gsap.fromTo(['#pillar1','#pillar2','#pillar3'],
+        { opacity: 0, y: 60 },
+        {
+            opacity: 1, y: 0, duration: 1, ease: 'power3.out', stagger: 0.15,
+            scrollTrigger: { trigger: '#values', start: 'top 75%', toggleActions: 'play none none none' }
+        }
+    );
+
+    // Gallery strip slow scroll effect
+    const strip = document.getElementById('stripTrack');
+    if (strip) {
+        gsap.to(strip, {
+            xPercent: -20,
+            ease: 'none',
+            scrollTrigger: { trigger: '#galleryStrip', start: 'top bottom', end: 'bottom top', scrub: 2 }
+        });
+    }
+
+    // Origin label float in
+    gsap.from('#originLabel', {
+        opacity: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.3,
+        scrollTrigger: { trigger: '#originImg', start: 'top 80%', toggleActions: 'play none none none' }
+    });
+}
+
+// ========== MAGNETIC BUTTONS ==========
+document.querySelectorAll('.magnetic-btn').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+        const rect = btn.getBoundingClientRect();
+        const x = (e.clientX - rect.left - rect.width / 2) * 0.15;
+        const y = (e.clientY - rect.top - rect.height / 2) * 0.15;
+        btn.style.transform = `translate(${x}px, ${y}px)`;
+    });
+    btn.addEventListener('mouseleave', () => {
+        btn.style.transform = 'translate(0, 0)';
+    });
+});
+
+// ========== INIT ==========
+window.addEventListener('load', () => {
+    setTimeout(initScrollAnimations, 100);
+});
+</script>
+
+</body>
+</html>

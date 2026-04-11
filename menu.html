@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Menu | Triple R Bar Restaurant — Sandy Ground, Saint Martin</title>
+    <meta name="description" content="Explore the full menu at Triple R Bar Restaurant. Caribbean mains, starters, crepes, signature cocktails & desserts in Sandy Ground, Saint Martin.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:wght@200;300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+    <script>
+    tailwind.config = {
+        theme: { extend: {
+            colors: { gold: { 300:'#f0d878', 400:'#e5c07b', 500:'#D4AF37', 600:'#b08d28', 700:'#8a6d1f' }, night:'#0a0a0a', deep:'#050505', tropical:'#0a1914' },
+            fontFamily: { serif:['Cinzel','serif'], sans:['Montserrat','sans-serif'], accent:['Cormorant Garamond','serif'] }
+        }}
+    }
+    </script>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: auto; }
+        body { background:#050505; color:#f3f4f6; overflow-x:hidden; font-family:'Montserrat',sans-serif; }
+        ::selection { background:#D4AF37; color:#0a0a0a; }
+        ::-webkit-scrollbar{width:6px} ::-webkit-scrollbar-track{background:#050505} ::-webkit-scrollbar-thumb{background:#D4AF37;border-radius:10px}
+
+        /* Noise grain overlay */
+        .noise{position:fixed;inset:0;pointer-events:none;z-index:9000;opacity:0.04;background-image:url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23n)"/%3E%3C/svg%3E')}
+
+        /* Loader */
+        .loader{position:fixed;inset:0;z-index:9999;background:#050505;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2rem}
+        .loader-bar{width:200px;height:1px;background:rgba(212,175,55,0.2);position:relative;overflow:hidden}
+        .loader-fill{position:absolute;left:0;top:0;height:100%;width:0;background:#D4AF37}
+        .loader-text{font-family:'Cinzel',serif;color:#D4AF37;font-size:0.7rem;letter-spacing:0.5em;text-transform:uppercase}
+
+        /* Glass nav */
+        .glass-nav{background:rgba(5,5,5,0.4);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(212,175,55,0.08);transition:all 0.6s cubic-bezier(0.16,1,0.3,1)}
+        .glass-nav.scrolled{background:rgba(5,5,5,0.92);border-bottom-color:rgba(212,175,55,0.18)}
+
+        /* Magnetic button */
+        .magnetic-btn{position:relative;overflow:hidden;transition:transform 0.4s cubic-bezier(0.16,1,0.3,1)}
+        .magnetic-btn::before{content:'';position:absolute;inset:0;background:#D4AF37;transform:translateY(101%);transition:transform 0.5s cubic-bezier(0.16,1,0.3,1)}
+        .magnetic-btn:hover::before{transform:translateY(0)}
+        .magnetic-btn span{position:relative;z-index:1}
+        .magnetic-btn:hover span{color:#050505}
+
+        /* Mobile menu */
+        .mobile-menu{position:fixed;inset:0;background:rgba(5,5,5,0.98);z-index:998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;clip-path:circle(0% at calc(100% - 2.5rem) 2.5rem);transition:clip-path 0.8s cubic-bezier(0.16,1,0.3,1)}
+        .mobile-menu.open{clip-path:circle(150% at calc(100% - 2.5rem) 2.5rem)}
+
+        /* Hero */
+        .hero-overlay{background:linear-gradient(180deg,rgba(5,5,5,0.5) 0%,rgba(5,5,5,0.2) 30%,rgba(5,5,5,0.65) 70%,#050505 100%)}
+        .hero-vignette{box-shadow:inset 0 0 250px 80px rgba(0,0,0,0.8)}
+        .gold-glow{text-shadow:0 0 60px rgba(212,175,55,0.35),0 0 120px rgba(212,175,55,0.12)}
+
+        /* Reveal animations */
+        .reveal-up{opacity:0;transform:translateY(60px)}
+        .reveal-scale{opacity:0;transform:scale(0.88)}
+
+        /* Marquee */
+        .marquee-track{display:flex;animation:marquee 40s linear infinite}
+        .marquee-track:hover{animation-play-state:paused}
+        @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+        /* Section divider */
+        .section-line{height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,0.3),transparent)}
+
+        /* Cursor follower */
+        .cursor-follower{position:fixed;width:20px;height:20px;border:1px solid rgba(212,175,55,0.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width 0.3s,height 0.3s,border-color 0.3s;mix-blend-mode:difference;display:none}
+        @media(hover:hover){.cursor-follower{display:block}}
+        .cursor-follower.hover{width:60px;height:60px;border-color:#D4AF37}
+
+        /* Sticky tabs */
+        .tab-bar{position:sticky;top:0;z-index:90;background:rgba(5,5,5,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(212,175,55,0.1)}
+        .tab-btn{position:relative;padding:1.1rem 1.25rem;font-size:0.65rem;letter-spacing:0.28em;text-transform:uppercase;font-family:'Montserrat',sans-serif;font-weight:600;color:#6b7280;transition:color 0.35s;white-space:nowrap;cursor:pointer;background:none;border:none}
+        .tab-btn::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:#D4AF37;transform:scaleX(0);transition:transform 0.4s cubic-bezier(0.16,1,0.3,1)}
+        .tab-btn.active{color:#D4AF37}
+        .tab-btn.active::after{transform:scaleX(1)}
+        .tab-btn:hover{color:#e5c07b}
+
+        /* Menu section visibility */
+        .menu-section{display:none;opacity:0}
+        .menu-section.active{display:block}
+
+        /* Menu item row */
+        .menu-item{display:flex;align-items:baseline;gap:0.5rem;padding:1rem 0;border-bottom:1px solid rgba(212,175,55,0.06);transition:background 0.3s}
+        .menu-item:hover{background:rgba(212,175,55,0.02)}
+        .menu-item:last-child{border-bottom:none}
+        .item-name{font-family:'Cinzel',serif;font-size:0.82rem;letter-spacing:0.08em;color:#e5e7eb;flex-shrink:0;transition:color 0.3s}
+        .menu-item:hover .item-name{color:#D4AF37}
+        .item-dots{flex:1;border-bottom:1px dotted rgba(212,175,55,0.2);position:relative;top:-0.3em;min-width:1.5rem}
+        .item-price{font-family:'Montserrat',sans-serif;font-size:0.8rem;font-weight:600;color:#D4AF37;flex-shrink:0;letter-spacing:0.05em}
+        .item-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.9rem;color:#6b7280;margin-top:0.15rem;display:block;line-height:1.4}
+
+        /* Category badge */
+        .category-badge{display:inline-flex;align-items:center;gap:0.5rem;padding:0.35rem 0.9rem;border:1px solid rgba(212,175,55,0.25);background:rgba(212,175,55,0.04);margin-bottom:0.5rem}
+        .category-badge span{font-family:'Montserrat',sans-serif;font-size:0.6rem;letter-spacing:0.35em;text-transform:uppercase;color:#D4AF37;font-weight:600}
+
+        /* Gallery */
+        .gallery-item{overflow:hidden;position:relative;cursor:pointer}
+        .gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(0.16,1,0.3,1)}
+        .gallery-item:hover img{transform:scale(1.1)}
+        .gallery-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,5,0.7) 0%,transparent 60%);opacity:0;transition:opacity 0.4s}
+        .gallery-item:hover .gallery-overlay{opacity:1}
+
+        /* Signature tag */
+        .signature-tag{display:inline-block;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.75rem;color:#b08d28;letter-spacing:0.05em;border:1px solid rgba(176,141,40,0.3);padding:0.1rem 0.5rem;margin-left:0.6rem;vertical-align:middle;line-height:1.6}
+
+        /* Scroll line animation */
+        @keyframes scrollLine{0%{top:-100%}100%{top:200%}}
+
+        /* Tab scroller on mobile */
+        .tab-scroll{overflow-x:auto;scrollbar-width:none;scroll-snap-type:x mandatory}
+        .tab-scroll::-webkit-scrollbar{display:none}
+
+        /* ===== MOBILE RESPONSIVE ===== */
+        body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+        footer{padding-bottom:env(safe-area-inset-bottom)}
+        @supports(height:100dvh){.h-screen{height:100dvh}}
+        @media(max-width:374px){
+            .tracking-\[0\.5em\]{letter-spacing:0.25em}
+            .tracking-\[0\.3em\]{letter-spacing:0.15em}
+            .px-6{padding-left:1rem;padding-right:1rem}
+            .gap-12{gap:1.5rem}
+            .text-5xl{font-size:2rem}
+            .py-28{padding-top:4rem;padding-bottom:4rem}
+            .menu-item{flex-wrap:wrap}
+            .item-dots{display:none}
+            .item-price{margin-top:0.25rem}
+            .tab-btn{padding:0.9rem 0.8rem;font-size:0.6rem}
+        }
+        @media(max-width:767px){
+            .reveal-up{transform:translateY(40px)}
+            .magnetic-btn{min-height:48px;display:inline-flex;align-items:center;justify-content:center}
+            nav a,nav button{min-height:44px;min-width:44px;display:inline-flex;align-items:center}
+            .parallax-img{will-change:auto}
+            .grid.gap-12{gap:2rem}
+        }
+        @media(hover:none){
+            .magnetic-btn:hover::before{transform:translateY(101%)}
+            .cursor-follower{display:none!important}
+        }
+    </style>
+</head>
+<body>
+
+<!-- Cursor Follower -->
+<div class="cursor-follower" id="cursor"></div>
+
+<!-- Noise Grain -->
+<div class="noise"></div>
+
+<!-- Loader -->
+<div class="loader" id="loader">
+    <p class="loader-text">Triple R</p>
+    <div class="loader-bar"><div class="loader-fill" id="loaderFill"></div></div>
+</div>
+
+<!-- NAV -->
+<nav class="fixed w-full z-[100] glass-nav py-5 px-6 md:px-12 flex justify-between items-center" id="mainNav">
+    <a href="index.html" class="font-serif text-gold-500 text-xl tracking-[0.15em] font-bold uppercase">Triple R</a>
+    <ul class="hidden lg:flex items-center gap-10 text-[11px] tracking-[0.25em] uppercase font-medium text-gray-400">
+        <li><a href="index.html" class="hover:text-gold-500 transition-colors duration-300">Home</a></li>
+        <li><a href="about.html" class="hover:text-gold-500 transition-colors duration-300">About</a></li>
+        <li><a href="menu.html" class="text-gold-500">Menu</a></li>
+        <li><a href="reservations.html" class="hover:text-gold-500 transition-colors duration-300">Reservations</a></li>
+        <li><a href="ambiance.html" class="hover:text-gold-500 transition-colors duration-300">Ambiance</a></li>
+        <li><a href="blog.html" class="hover:text-gold-500 transition-colors duration-300">Blog</a></li>
+    </ul>
+    <a href="reservations.html" class="hidden lg:block magnetic-btn border border-gold-500 text-gold-500 px-7 py-3 text-[10px] tracking-[0.3em] uppercase font-semibold"><span>Reserve</span></a>
+    <button class="lg:hidden text-gold-500 z-[999] relative" id="menuToggle" aria-label="Menu">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <line x1="3" y1="6" x2="21" y2="6" id="line1" style="transition:all 0.4s"/>
+            <line x1="3" y1="12" x2="21" y2="12" id="line2" style="transition:all 0.4s"/>
+            <line x1="3" y1="18" x2="21" y2="18" id="line3" style="transition:all 0.4s"/>
+        </svg>
+    </button>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <a href="index.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest">Home</a>
+    <a href="about.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest">About</a>
+    <a href="menu.html" class="font-serif text-3xl text-gold-500 tracking-widest">Menu</a>
+    <a href="reservations.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest">Reservations</a>
+    <a href="ambiance.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest">Ambiance</a>
+    <a href="blog.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest">Blog</a>
+    <div class="mt-8">
+        <a href="reservations.html" class="border border-gold-500 text-gold-500 px-10 py-4 text-xs tracking-[0.3em] uppercase hover:bg-gold-500 hover:text-night transition-all">Reserve a Table</a>
+    </div>
+</div>
+
+<!-- ==================== HERO ==================== -->
+<section class="relative h-[70vh] min-h-[520px] w-full flex items-center justify-center overflow-hidden" id="hero">
+    <div class="absolute inset-0 z-0">
+        <img src="pictures &amp; videos/DISH.jpeg" alt="Triple R signature dish" class="absolute inset-0 w-full h-full object-cover" id="heroBg" style="transform:scale(1.08)">
+        <div class="absolute inset-0 hero-overlay z-[1]"></div>
+        <div class="absolute inset-0 hero-vignette z-[2]"></div>
+    </div>
+
+    <!-- Cinematic bars -->
+    <div class="absolute top-0 left-0 right-0 h-[7vh] bg-deep z-[3]"></div>
+    <div class="absolute bottom-0 left-0 right-0 h-[7vh] bg-deep z-[3]"></div>
+
+    <!-- Content -->
+    <div class="relative z-10 text-center px-4" id="heroContent">
+        <p class="font-sans text-gold-500 tracking-[0.55em] uppercase text-[10px] md:text-xs mb-5 reveal-up" id="heroEyebrow">Sandy Ground, Saint Martin</p>
+        <h1 class="font-serif text-6xl sm:text-8xl md:text-9xl font-bold text-white leading-[0.9] gold-glow mb-5 reveal-up" id="heroTitle">Our Menu</h1>
+        <div class="flex items-center justify-center gap-5 mb-5 reveal-up">
+            <div class="w-12 md:w-20 h-[1px] bg-gold-500/50"></div>
+            <p class="font-accent text-xl md:text-2xl text-gray-300 italic tracking-wide">Crafted with Passion</p>
+            <div class="w-12 md:w-20 h-[1px] bg-gold-500/50"></div>
+        </div>
+        <p class="font-sans text-gray-400 tracking-[0.3em] text-[10px] uppercase reveal-up">Caribbean Flavors &nbsp;&#9670;&nbsp; Fresh Ingredients &nbsp;&#9670;&nbsp; Island Soul</p>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-16 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center">
+        <span class="text-[10px] tracking-[0.4em] uppercase text-gold-500/60 mb-4">Scroll</span>
+        <div class="w-[1px] h-12 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gold-500/25"></div>
+            <div class="absolute top-0 w-full h-1/2 bg-gold-500" style="animation:scrollLine 2s ease-in-out infinite"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== MARQUEE ==================== -->
+<div class="py-5 border-y border-gold-500/10 overflow-hidden bg-deep">
+    <div class="marquee-track">
+        <div class="flex items-center gap-8 shrink-0 px-4">
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Caribbean Cuisine</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Craft Cocktails</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Fresh Catch Daily</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Island Desserts</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Signature Crepes</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Rum Selection</span>
+            <span class="text-gold-700">&#9670;</span>
+        </div>
+        <!-- Duplicate for seamless loop -->
+        <div class="flex items-center gap-8 shrink-0 px-4" aria-hidden="true">
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Caribbean Cuisine</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Craft Cocktails</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Fresh Catch Daily</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Island Desserts</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Signature Crepes</span>
+            <span class="text-gold-700">&#9670;</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Rum Selection</span>
+            <span class="text-gold-700">&#9670;</span>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== STICKY TAB BAR ==================== -->
+<div class="tab-bar" id="tabBar">
+    <div class="tab-scroll">
+        <div class="flex items-center px-4 md:px-12 md:justify-center">
+            <button class="tab-btn active" data-tab="starters">Starters</button>
+            <button class="tab-btn" data-tab="mains">Mains</button>
+            <button class="tab-btn" data-tab="crepes">Crepes</button>
+            <button class="tab-btn" data-tab="drinks">Cocktails &amp; Drinks</button>
+            <button class="tab-btn" data-tab="desserts">Desserts</button>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== MENU CONTENT ==================== -->
+<section class="bg-deep py-20 px-6 md:px-12" id="menuContent">
+    <div class="max-w-5xl mx-auto">
+
+        <!-- ===== STARTERS ===== -->
+        <div class="menu-section active" id="section-starters">
+            <div class="mb-14 reveal-up">
+                <div class="category-badge mb-4"><span>To Begin</span></div>
+                <h2 class="font-serif text-4xl md:text-5xl text-white tracking-wide mb-3">Starters</h2>
+                <div class="section-line max-w-xs mb-6"></div>
+                <p class="font-accent italic text-gray-500 text-lg">Start your island journey with bold, vibrant flavors.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-x-16 menu-items-grid">
+                <!-- Item -->
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Mix Tapas</span>
+                        <span class="item-desc">A selection of island-inspired bites to share</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$14</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Chicken Wings <small class="font-sans text-gray-600 text-[10px] tracking-widest">(6 pcs)</small></span>
+                        <span class="item-desc">Crispy golden wings, island-spiced sauce</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$10</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Fish Accras</span>
+                        <span class="item-desc">Traditional Caribbean salt fish fritters</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$8</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Spring Rolls <small class="font-sans text-gray-600 text-[10px] tracking-widest">(4 pcs)</small></span>
+                        <span class="item-desc">Crispy rolls with a fresh vegetable medley</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$9</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Loaded Nachos</span>
+                        <span class="item-desc">Cheese, jalapeños, sour cream &amp; pico de gallo</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$12</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Soup of the Day</span>
+                        <span class="item-desc">Ask your server for today's island-inspired creation</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$8</span>
+                </div>
+            </div>
+            <!-- Starter image feature -->
+            <div class="mt-16 overflow-hidden rounded-none reveal-scale">
+                <div class="relative h-72 md:h-96 gallery-item">
+                    <img src="pictures &amp; videos/Mix Tapas.png" alt="Mix Tapas at Triple R" class="w-full h-full object-cover">
+                    <div class="gallery-overlay"></div>
+                    <div class="absolute bottom-0 left-0 p-6 z-10">
+                        <p class="font-serif text-white text-sm tracking-widest uppercase">Mix Tapas</p>
+                        <p class="font-accent italic text-gold-400 text-sm">Our bestseller starter</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MAINS ===== -->
+        <div class="menu-section" id="section-mains">
+            <div class="mb-14 reveal-up">
+                <div class="category-badge mb-4"><span>Main Course</span></div>
+                <h2 class="font-serif text-4xl md:text-5xl text-white tracking-wide mb-3">Mains</h2>
+                <div class="section-line max-w-xs mb-6"></div>
+                <p class="font-accent italic text-gray-500 text-lg">Hearty Caribbean plates, made fresh every day.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-x-16 menu-items-grid">
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Oxtail</span>
+                        <span class="item-desc">Slow-braised, white rice, salt fish pie &amp; mixed salad</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$18</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Stew Beef</span>
+                        <span class="item-desc">Rich island stew with fried rice</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$16</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Grilled Chicken</span>
+                        <span class="item-desc">Herb-marinated, served with baked macaroni</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$15</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Fresh Catch of the Day
+                            <span class="signature-tag">Chef's Choice</span>
+                        </span>
+                        <span class="item-desc">Ask your server for the day's freshest selection</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$22</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Jerk Pork Ribs</span>
+                        <span class="item-desc">Slow-smoked, authentic jerk seasoning, served with sides</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$19</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Pasta Bolognese</span>
+                        <span class="item-desc">Classic al dente pasta, slow-cooked meat sauce</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$14</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Curry Goat</span>
+                        <span class="item-desc">Traditional Caribbean curry with rice &amp; peas</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$17</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Grilled Lobster Tail
+                            <span class="signature-tag">Premium</span>
+                        </span>
+                        <span class="item-desc">Butter-basted, fresh from Saint Martin waters</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$35</span>
+                </div>
+            </div>
+
+            <!-- Mains feature images -->
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="gallery-item h-72 reveal-scale">
+                    <img src="pictures &amp; videos/Oxtail, white rice, salt fish pie, mix salade.png" alt="Oxtail with white rice" class="w-full h-full object-cover">
+                    <div class="gallery-overlay"></div>
+                    <div class="absolute bottom-0 left-0 p-5 z-10">
+                        <p class="font-serif text-white text-sm tracking-widest uppercase">Oxtail</p>
+                        <p class="font-accent italic text-gold-400 text-xs">White rice, salt fish pie &amp; salad</p>
+                    </div>
+                </div>
+                <div class="grid grid-rows-2 gap-4">
+                    <div class="gallery-item h-[calc(50%-0.5rem)] reveal-scale">
+                        <img src="pictures &amp; videos/stew beef fried rice, baked macaroni.png" alt="Stew beef with fried rice" class="w-full h-full object-cover">
+                        <div class="gallery-overlay"></div>
+                        <div class="absolute bottom-0 left-0 p-4 z-10">
+                            <p class="font-serif text-white text-xs tracking-widest uppercase">Stew Beef</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item h-[calc(50%-0.5rem)] reveal-scale">
+                        <img src="pictures &amp; videos/pasta.png" alt="Pasta Bolognese" class="w-full h-full object-cover">
+                        <div class="gallery-overlay"></div>
+                        <div class="absolute bottom-0 left-0 p-4 z-10">
+                            <p class="font-serif text-white text-xs tracking-widest uppercase">Pasta Bolognese</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CREPES ===== -->
+        <div class="menu-section" id="section-crepes">
+            <div class="mb-14 reveal-up">
+                <div class="category-badge mb-4"><span>La Crêperie</span></div>
+                <h2 class="font-serif text-4xl md:text-5xl text-white tracking-wide mb-3">Crepes</h2>
+                <div class="section-line max-w-xs mb-6"></div>
+                <p class="font-accent italic text-gray-500 text-lg">Sweet or savory — a touch of French-Caribbean elegance.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-x-16 menu-items-grid">
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Nutella &amp; Banana</span>
+                        <span class="item-desc">Warm crepe, rich Nutella, fresh banana slices</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$8</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Ham &amp; Cheese</span>
+                        <span class="item-desc">Smoked ham, melted Emmental, Dijon touch</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$9</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Chicken &amp; Mushroom</span>
+                        <span class="item-desc">Sautéed chicken, wild mushrooms, creamy sauce</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$11</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Salmon &amp; Cream Cheese
+                            <span class="signature-tag">Popular</span>
+                        </span>
+                        <span class="item-desc">Smoked salmon, whipped cream cheese, capers</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$13</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Sugar &amp; Lemon</span>
+                        <span class="item-desc">Classic French crepe — simple and perfect</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$6</span>
+                </div>
+            </div>
+
+            <!-- Crepe image -->
+            <div class="mt-16 gallery-item h-80 md:h-[420px] reveal-scale">
+                <img src="pictures &amp; videos/client eating a crèpe.jpeg" alt="Guest enjoying a crepe at Triple R" class="w-full h-full object-cover object-top">
+                <div class="gallery-overlay"></div>
+                <div class="absolute bottom-0 left-0 p-6 z-10">
+                    <p class="font-serif text-white text-sm tracking-widest uppercase">La Crêperie</p>
+                    <p class="font-accent italic text-gold-400 text-sm">Made fresh, served with joy</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== COCKTAILS & DRINKS ===== -->
+        <div class="menu-section" id="section-drinks">
+            <div class="mb-14 reveal-up">
+                <div class="category-badge mb-4"><span>The Bar</span></div>
+                <h2 class="font-serif text-4xl md:text-5xl text-white tracking-wide mb-3">Cocktails &amp; Drinks</h2>
+                <div class="section-line max-w-xs mb-6"></div>
+                <p class="font-accent italic text-gray-500 text-lg">Sip the spirit of the Caribbean — one glass at a time.</p>
+            </div>
+
+            <!-- Signature Cocktails -->
+            <div class="mb-8">
+                <p class="font-sans text-[10px] tracking-[0.35em] uppercase text-gold-600 mb-6">Signature Cocktails</p>
+                <div class="grid md:grid-cols-2 gap-x-16 menu-items-grid">
+                    <div class="menu-item reveal-up">
+                        <div class="flex-1">
+                            <span class="item-name">Triple R Punch
+                                <span class="signature-tag">Signature</span>
+                            </span>
+                            <span class="item-desc">Our iconic house punch — a Caribbean secret</span>
+                        </div>
+                        <div class="item-dots mx-3"></div>
+                        <span class="item-price">$12</span>
+                    </div>
+                    <div class="menu-item reveal-up">
+                        <div class="flex-1">
+                            <span class="item-name">Mojito</span>
+                            <span class="item-desc">White rum, fresh mint, lime, cane sugar</span>
+                        </div>
+                        <div class="item-dots mx-3"></div>
+                        <span class="item-price">$10</span>
+                    </div>
+                    <div class="menu-item reveal-up">
+                        <div class="flex-1">
+                            <span class="item-name">Pina Colada</span>
+                            <span class="item-desc">Coconut rum, pineapple, cream of coconut</span>
+                        </div>
+                        <div class="item-dots mx-3"></div>
+                        <span class="item-price">$11</span>
+                    </div>
+                    <div class="menu-item reveal-up">
+                        <div class="flex-1">
+                            <span class="item-name">Ti' Punch</span>
+                            <span class="item-desc">White rhum agricole, lime, cane syrup — island classic</span>
+                        </div>
+                        <div class="item-dots mx-3"></div>
+                        <span class="item-price">$8</span>
+                    </div>
+                    <div class="menu-item reveal-up">
+                        <div class="flex-1">
+                            <span class="item-name">Rum Sour</span>
+                            <span class="item-desc">Aged rum, lemon juice, egg white, bitters</span>
+                        </div>
+                        <div class="item-dots mx-3"></div>
+                        <span class="item-price">$10</span>
+                    </div>
+                    <div class="menu-item reveal-up">
+                        <div class="flex-1">
+                            <span class="item-name">Aged Rum Selection</span>
+                            <span class="item-desc">Ask your bartender — curated Caribbean aged rums</span>
+                        </div>
+                        <div class="item-dots mx-3"></div>
+                        <span class="item-price">$12–25</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Drinks Feature Image -->
+            <div class="mt-12 mb-10 overflow-hidden rounded-none reveal-scale">
+                <div class="relative h-72 md:h-96 gallery-item">
+                    <img src="pictures &amp; videos/Clients Drinking Bwa Kalé Energy Drink.jpeg" alt="Clients enjoying drinks at Triple R" class="w-full h-full object-cover">
+                    <div class="gallery-overlay"></div>
+                    <div class="absolute bottom-0 left-0 p-6 z-10">
+                        <p class="font-serif text-white text-sm tracking-widest uppercase">The Bar Experience</p>
+                        <p class="font-accent italic text-gold-400 text-sm">Good vibes, great drinks</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="section-line my-10"></div>
+
+            <!-- Non-Alcoholic & Others -->
+            <div>
+                <p class="font-sans text-[10px] tracking-[0.35em] uppercase text-gold-600 mb-6">Soft Drinks &amp; More</p>
+                <div class="grid md:grid-cols-2 gap-x-16 menu-items-grid">
+                    <div class="menu-item reveal-up">
+                        <div class="flex-1">
+                            <span class="item-name">Fresh Juice</span>
+                            <span class="item-desc">Seasonal tropical fruits, pressed daily</span>
+                        </div>
+                        <div class="item-dots mx-3"></div>
+                        <span class="item-price">$6</span>
+                    </div>
+                    <div class="menu-item reveal-up">
+                        <div class="flex-1">
+                            <span class="item-name">Soft Drinks</span>
+                            <span class="item-desc">Coke, Sprite, Fanta &amp; more</span>
+                        </div>
+                        <div class="item-dots mx-3"></div>
+                        <span class="item-price">$4</span>
+                    </div>
+                    <div class="menu-item reveal-up">
+                        <div class="flex-1">
+                            <span class="item-name">Local Beer</span>
+                            <span class="item-desc">Presidente, Corsaire &amp; island brews</span>
+                        </div>
+                        <div class="item-dots mx-3"></div>
+                        <span class="item-price">$5</span>
+                    </div>
+                    <div class="menu-item reveal-up">
+                        <div class="flex-1">
+                            <span class="item-name">Imported Beer</span>
+                            <span class="item-desc">Heineken, Corona, Stella Artois</span>
+                        </div>
+                        <div class="item-dots mx-3"></div>
+                        <span class="item-price">$7</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== DESSERTS ===== -->
+        <div class="menu-section" id="section-desserts">
+            <div class="mb-14 reveal-up">
+                <div class="category-badge mb-4"><span>Sweet Ending</span></div>
+                <h2 class="font-serif text-4xl md:text-5xl text-white tracking-wide mb-3">Desserts</h2>
+                <div class="section-line max-w-xs mb-6"></div>
+                <p class="font-accent italic text-gray-500 text-lg">End on a sweet note — island indulgence awaits.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-x-16 menu-items-grid">
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Chocolate Fondant</span>
+                        <span class="item-desc">Warm dark chocolate cake, molten center, vanilla ice cream</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$10</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Coconut Flan</span>
+                        <span class="item-desc">Caribbean-style flan with caramelized coconut</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$8</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Fruit Salad</span>
+                        <span class="item-desc">Seasonal tropical fruits, passion fruit coulis</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$7</span>
+                </div>
+                <div class="menu-item reveal-up">
+                    <div class="flex-1">
+                        <span class="item-name">Ice Cream <small class="font-sans text-gray-600 text-[10px] tracking-widest">(3 scoops)</small></span>
+                        <span class="item-desc">Vanilla, chocolate or coconut — ask for daily flavors</span>
+                    </div>
+                    <div class="item-dots mx-3"></div>
+                    <span class="item-price">$8</span>
+                </div>
+            </div>
+            <!-- Dessert feature image -->
+            <div class="mt-16 overflow-hidden rounded-none reveal-scale">
+                <div class="relative h-72 md:h-96 gallery-item">
+                    <img src="pictures &amp; videos/client enjoying meal.jpeg" alt="Client enjoying dessert at Triple R" class="w-full h-full object-cover">
+                    <div class="gallery-overlay"></div>
+                    <div class="absolute bottom-0 left-0 p-6 z-10">
+                        <p class="font-serif text-white text-sm tracking-widest uppercase">Sweet Endings</p>
+                        <p class="font-accent italic text-gold-400 text-sm">The perfect finish to your meal</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ==================== FOOD GALLERY ==================== -->
+<section class="bg-night py-24 px-6 md:px-12" id="gallery">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16 reveal-up">
+            <p class="font-sans text-gold-500 tracking-[0.45em] uppercase text-[10px] mb-4">Visual Story</p>
+            <h2 class="font-serif text-4xl md:text-5xl text-white tracking-wide mb-4">From Our Kitchen</h2>
+            <div class="section-line max-w-sm mx-auto mb-6"></div>
+            <p class="font-accent italic text-gray-500 text-lg max-w-md mx-auto">Every plate is a work of art — fresh, vibrant, made with love.</p>
+        </div>
+
+        <!-- Gallery grid -->
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+            <div class="gallery-item col-span-2 md:col-span-1 h-64 md:h-80 reveal-scale">
+                <img src="pictures &amp; videos/Mix Tapas.png" alt="Mix Tapas" class="w-full h-full object-cover">
+                <div class="gallery-overlay"></div>
+                <div class="absolute bottom-0 left-0 p-4 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <p class="font-serif text-white text-xs tracking-widest uppercase">Mix Tapas</p>
+                </div>
+            </div>
+            <div class="gallery-item h-64 md:h-80 reveal-scale">
+                <img src="pictures &amp; videos/Stew turkey White rice Steamed vegetable Lentil peas.jpeg" alt="Stew Turkey plate" class="w-full h-full object-cover">
+                <div class="gallery-overlay"></div>
+            </div>
+            <div class="gallery-item h-64 md:h-80 reveal-scale">
+                <img src="pictures &amp; videos/pasta.png" alt="Pasta Bolognese" class="w-full h-full object-cover">
+                <div class="gallery-overlay"></div>
+            </div>
+            <div class="gallery-item h-64 md:h-80 reveal-scale">
+                <img src="pictures &amp; videos/stew beef fried rice, baked macaroni.png" alt="Stew beef with fried rice" class="w-full h-full object-cover">
+                <div class="gallery-overlay"></div>
+            </div>
+            <div class="gallery-item col-span-2 md:col-span-1 h-64 md:h-80 reveal-scale">
+                <img src="pictures &amp; videos/DISH.jpeg" alt="Signature dish" class="w-full h-full object-cover">
+                <div class="gallery-overlay"></div>
+            </div>
+            <div class="gallery-item h-64 md:h-80 reveal-scale">
+                <img src="pictures &amp; videos/Plat ( Chicken wings &amp;  fries.jpeg" alt="Chicken Wings &amp; Fries" class="w-full h-full object-cover">
+                <div class="gallery-overlay"></div>
+            </div>
+            <div class="gallery-item col-span-2 md:col-span-1 h-64 md:h-80 reveal-scale">
+                <img src="pictures &amp; videos/Oxtail, white rice, salt fish pie, mix salade.png" alt="Oxtail Special" class="w-full h-full object-cover">
+                <div class="gallery-overlay"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== CTA SECTION ==================== -->
+<section class="bg-deep py-28 px-6 text-center relative overflow-hidden" id="cta">
+    <!-- Background image -->
+    <div class="absolute inset-0 z-0">
+        <img src="pictures &amp; videos/chill out spot. triple r bar restaurant.jpeg" alt="Triple R ambiance" class="w-full h-full object-cover opacity-20">
+    </div>
+    <!-- Background glow -->
+    <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse 80% 60% at 50% 50%, rgba(212,175,55,0.04) 0%, transparent 70%)"></div>
+
+    <div class="max-w-2xl mx-auto relative z-10">
+        <p class="font-sans text-gold-500 tracking-[0.5em] uppercase text-[10px] mb-6 reveal-up">Sandy Ground, Saint Martin</p>
+        <h2 class="font-serif text-5xl md:text-6xl text-white tracking-wide mb-4 reveal-up gold-glow">Ready to Taste?</h2>
+        <div class="flex items-center justify-center gap-5 mb-6 reveal-up">
+            <div class="w-12 h-[1px] bg-gold-500/40"></div>
+            <p class="font-accent italic text-gold-400 text-xl">Join us at Triple R</p>
+            <div class="w-12 h-[1px] bg-gold-500/40"></div>
+        </div>
+        <p class="font-sans text-gray-500 text-sm tracking-[0.08em] leading-relaxed mb-12 reveal-up">
+            Reserve your table and let us take you on a journey through the finest Caribbean flavors. Walk-ins welcome — reservations recommended on weekends.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center reveal-up">
+            <a href="reservations.html" class="magnetic-btn bg-gold-500 text-deep px-12 py-5 text-[10px] tracking-[0.35em] uppercase font-bold"><span>Reserve a Table</span></a>
+            <a href="about.html" class="magnetic-btn border border-gold-500/50 text-gray-400 px-12 py-5 text-[10px] tracking-[0.35em] uppercase font-semibold"><span>Our Story</span></a>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="bg-deep border-t border-gold-500/10 py-16 px-6 md:px-12">
+    <div class="max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <!-- Brand -->
+            <div>
+                <a href="index.html" class="font-serif text-gold-500 text-2xl tracking-[0.2em] font-bold uppercase block mb-4">Triple R</a>
+                <p class="font-accent italic text-gray-500 text-base leading-relaxed mb-6">Bar &amp; Restaurant<br>Sandy Ground, Saint Martin</p>
+                <div class="flex gap-4">
+                    <a href="#" aria-label="Instagram" class="w-9 h-9 border border-gold-500/20 flex items-center justify-center text-gray-500 hover:text-gold-500 hover:border-gold-500/60 transition-all">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+                    </a>
+                    <a href="#" aria-label="Facebook" class="w-9 h-9 border border-gold-500/20 flex items-center justify-center text-gray-500 hover:text-gold-500 hover:border-gold-500/60 transition-all">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div>
+                <p class="font-sans text-[10px] tracking-[0.4em] uppercase text-gold-600 mb-6">Navigate</p>
+                <ul class="space-y-3">
+                    <li><a href="index.html" class="font-sans text-sm text-gray-500 hover:text-gold-500 transition-colors tracking-wide">Home</a></li>
+                    <li><a href="about.html" class="font-sans text-sm text-gray-500 hover:text-gold-500 transition-colors tracking-wide">About</a></li>
+                    <li><a href="menu.html" class="font-sans text-sm text-gold-500 tracking-wide">Menu</a></li>
+                    <li><a href="reservations.html" class="font-sans text-sm text-gray-500 hover:text-gold-500 transition-colors tracking-wide">Reservations</a></li>
+                    <li><a href="ambiance.html" class="font-sans text-sm text-gray-500 hover:text-gold-500 transition-colors tracking-wide">Ambiance</a></li>
+                    <li><a href="blog.html" class="font-sans text-sm text-gray-500 hover:text-gold-500 transition-colors tracking-wide">Blog</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+            <div>
+                <p class="font-sans text-[10px] tracking-[0.4em] uppercase text-gold-600 mb-6">Visit Us</p>
+                <address class="not-italic space-y-3">
+                    <p class="font-sans text-sm text-gray-500 leading-relaxed">Sandy Ground<br>Saint Martin 97150</p>
+                    <p class="font-sans text-sm text-gray-500">Tue — Sun<br><span class="text-gray-400">8:00 AM — 2:00 AM</span></p>
+                </address>
+            </div>
+        </div>
+
+        <!-- Bottom bar -->
+        <div class="section-line mb-8"></div>
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p class="font-sans text-xs text-gray-600 tracking-wide">&copy; 2025 Triple R Bar Restaurant. All rights reserved.</p>
+            <p class="font-accent italic text-gray-700 text-sm">Sandy Ground, Saint Martin</p>
+        </div>
+    </div>
+</footer>
+
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+(function () {
+    'use strict';
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ── LOADER ──────────────────────────────────────────────
+    const loader = document.getElementById('loader');
+    const fill = document.getElementById('loaderFill');
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += Math.random() * 18 + 5;
+        if (progress >= 100) { progress = 100; clearInterval(interval); }
+        fill.style.width = progress + '%';
+    }, 80);
+
+    window.addEventListener('load', () => {
+        clearInterval(interval);
+        fill.style.width = '100%';
+        setTimeout(() => {
+            gsap.to(loader, {
+                opacity: 0,
+                duration: 0.8,
+                ease: 'power2.inOut',
+                onComplete: () => {
+                    loader.style.display = 'none';
+                    initAnimations();
+                }
+            });
+        }, 300);
+    });
+
+    // ── CURSOR FOLLOWER ──────────────────────────────────────
+    const cursor = document.getElementById('cursor');
+    let mx = -100, my = -100;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    (function animateCursor() {
+        cursor.style.left = mx + 'px';
+        cursor.style.top = my + 'px';
+        requestAnimationFrame(animateCursor);
+    })();
+    document.querySelectorAll('a, button, .gallery-item').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+
+    // ── NAV SCROLL ───────────────────────────────────────────
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+        nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // ── MOBILE MENU ──────────────────────────────────────────
+    const toggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const l1 = document.getElementById('line1');
+    const l2 = document.getElementById('line2');
+    const l3 = document.getElementById('line3');
+    let menuOpen = false;
+
+    toggle.addEventListener('click', () => {
+        menuOpen = !menuOpen;
+        mobileMenu.classList.toggle('open', menuOpen);
+        document.body.style.overflow = menuOpen ? 'hidden' : '';
+        if (menuOpen) {
+            l1.setAttribute('x1','4'); l1.setAttribute('y1','4'); l1.setAttribute('x2','20'); l1.setAttribute('y2','20');
+            l2.style.opacity = '0';
+            l3.setAttribute('x1','4'); l3.setAttribute('y1','20'); l3.setAttribute('x2','20'); l3.setAttribute('y2','4');
+        } else {
+            l1.setAttribute('x1','3'); l1.setAttribute('y1','6'); l1.setAttribute('x2','21'); l1.setAttribute('y2','6');
+            l2.style.opacity = '1';
+            l3.setAttribute('x1','3'); l3.setAttribute('y1','18'); l3.setAttribute('x2','21'); l3.setAttribute('y2','18');
+        }
+    });
+
+    mobileMenu.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+            menuOpen = false;
+            mobileMenu.classList.remove('open');
+            document.body.style.overflow = '';
+        });
+    });
+
+    // ── HERO PARALLAX ────────────────────────────────────────
+    const heroBg = document.getElementById('heroBg');
+    if (heroBg) {
+        window.addEventListener('scroll', () => {
+            const y = window.scrollY;
+            heroBg.style.transform = `scale(1.08) translateY(${y * 0.25}px)`;
+        }, { passive: true });
+    }
+
+    // ── TAB SWITCHING ─────────────────────────────────────────
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const menuSections = document.querySelectorAll('.menu-section');
+
+    function switchTab(tabId) {
+        tabBtns.forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+
+        menuSections.forEach(sec => {
+            if (sec.id === 'section-' + tabId) {
+                sec.classList.add('active');
+                gsap.fromTo(sec, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' });
+                // Re-trigger item animations for newly shown section
+                sec.querySelectorAll('.reveal-up').forEach((el, i) => {
+                    gsap.fromTo(el, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, delay: i * 0.04, ease: 'power3.out' });
+                });
+                sec.querySelectorAll('.reveal-scale').forEach((el, i) => {
+                    gsap.fromTo(el, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6, delay: i * 0.08 + 0.1, ease: 'power3.out' });
+                });
+            } else {
+                sec.classList.remove('active');
+            }
+        });
+    }
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+
+    // ── GSAP SCROLL ANIMATIONS ───────────────────────────────
+    function initAnimations() {
+        // Hero entrance
+        const heroContent = document.getElementById('heroContent');
+        if (heroContent) {
+            gsap.fromTo('#heroEyebrow', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1, delay: 0.3, ease: 'power3.out' });
+            gsap.fromTo('#heroTitle', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1.1, delay: 0.5, ease: 'power3.out' });
+            gsap.fromTo(heroContent.querySelectorAll('.reveal-up'), { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.9, stagger: 0.15, delay: 0.7, ease: 'power3.out' });
+        }
+
+        // Active section initial animation
+        const activeSection = document.querySelector('.menu-section.active');
+        if (activeSection) {
+            activeSection.style.opacity = 1;
+            activeSection.querySelectorAll('.reveal-up').forEach((el, i) => {
+                gsap.fromTo(el, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.5, delay: 0.2 + i * 0.05, ease: 'power3.out' });
+            });
+            activeSection.querySelectorAll('.reveal-scale').forEach((el, i) => {
+                gsap.fromTo(el, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6, delay: 0.3 + i * 0.1, ease: 'power3.out' });
+            });
+        }
+
+        // Gallery & CTA scroll reveals
+        gsap.utils.toArray('#gallery .reveal-up, #gallery .reveal-scale, #cta .reveal-up').forEach((el, i) => {
+            gsap.fromTo(el, { opacity: 0, y: el.classList.contains('reveal-scale') ? 0 : 50, scale: el.classList.contains('reveal-scale') ? 0.88 : 1 },
+            {
+                opacity: 1, y: 0, scale: 1,
+                duration: 0.75,
+                ease: 'power3.out',
+                scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+            });
+        });
+
+        // Gallery hover label show
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            const label = item.querySelector('[class*="opacity-0"]');
+            if (label) {
+                item.addEventListener('mouseenter', () => { label.style.opacity = '1'; });
+                item.addEventListener('mouseleave', () => { label.style.opacity = '0'; });
+            }
+        });
+    }
+
+    // Fallback if load already fired
+    if (document.readyState === 'complete') {
+        fill.style.width = '100%';
+        setTimeout(() => {
+            loader.style.opacity = '0';
+            setTimeout(() => { loader.style.display = 'none'; initAnimations(); }, 800);
+        }, 200);
+    }
+})();
+</script>
+</body>
+</html>
