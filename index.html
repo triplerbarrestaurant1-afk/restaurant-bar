@@ -129,13 +129,15 @@
             .reveal-up{transform:translateY(40px)}
             .reveal-left{transform:translateX(-40px)}
             .reveal-right{transform:translateX(40px)}
-            /* Prevent horizontal overflow */
-            .horizontal-section{overflow-x:auto;scroll-snap-type:x mandatory}
+            /* Mobile gallery: vertical stack, no pinning, fast reveal */
+            .horizontal-section{overflow:visible}
+            .horizontal-track{display:grid!important;grid-template-columns:1fr 1fr;gap:1rem;padding-left:1rem!important;padding-right:1rem}
+            .horizontal-track > div{width:auto!important;margin-top:0!important;opacity:0;transform:translateY(20px);transition:opacity .5s ease-out,transform .5s ease-out}
+            .horizontal-track > div.in-view{opacity:1;transform:translateY(0)}
+            .horizontal-track .aspect-\[3\/4\]{aspect-ratio:3/4}
             /* Bigger touch targets */
             .magnetic-btn{min-height:48px;display:inline-flex;align-items:center;justify-content:center}
             nav a,nav button{min-height:44px;min-width:44px;display:inline-flex;align-items:center}
-            /* Smooth scrolling for gallery on touch */
-            .horizontal-track{overflow-x:auto;scroll-snap-type:x mandatory}
             /* Reduce parallax on mobile for performance */
             .parallax-img{will-change:auto}
             /* Footer spacing */
@@ -148,7 +150,20 @@
             .blog-card:hover{transform:none}
             .cursor-follower{display:none!important}
         }
-    </style>
+
+        /* Language toggle */
+        .lang-toggle,.lang-toggle-mobile{cursor:pointer;background:transparent}
+    
+        /* Logo explosive animation */
+        .logo-link{display:inline-block;position:relative}
+        .logo-img{filter:drop-shadow(0 0 0 transparent);transition:filter 0.3s ease}
+        .logo-link:hover .logo-img{filter:drop-shadow(0 0 8px rgba(212,175,55,0.6)) drop-shadow(0 0 20px rgba(212,175,55,0.3))}
+        @keyframes logoExplodeIn{0%{opacity:0;transform:scale(0.3) rotate(-10deg);filter:brightness(3) drop-shadow(0 0 40px rgba(212,175,55,1))}30%{opacity:1;transform:scale(1.2) rotate(3deg);filter:brightness(2) drop-shadow(0 0 30px rgba(212,175,55,0.8))}50%{transform:scale(0.95) rotate(-1deg);filter:brightness(1.5) drop-shadow(0 0 20px rgba(212,175,55,0.5))}70%{transform:scale(1.05) rotate(0.5deg)}100%{transform:scale(1) rotate(0deg);filter:brightness(1) drop-shadow(0 0 0 transparent)}}
+        .logo-explode{animation:logoExplodeIn 1.2s cubic-bezier(0.34,1.56,0.64,1) forwards}
+        @keyframes sparkle{0%,100%{opacity:0;transform:scale(0) translate(0,0)}50%{opacity:1;transform:scale(1)}}
+        .logo-particle{position:absolute;width:4px;height:4px;background:#D4AF37;border-radius:50;pointer-events:none;opacity:0}
+
+        </style>
 </head>
 <body>
 
@@ -166,16 +181,20 @@
 
 <!-- NAV -->
 <nav class="fixed w-full z-[100] glass-nav py-5 px-6 md:px-12 flex justify-between items-center" id="mainNav">
-    <a href="index.html" class="font-serif text-gold-500 text-xl tracking-[0.15em] font-bold uppercase">Triple R</a>
+    <a href="index.html" class="logo-link relative" id="navLogo"><img src="pictures &amp; videos/Triple R Bar Restaurant Logo.png" alt="Triple R Bar Restaurant" class="h-12 md:h-14 w-auto logo-img"></a>
     <ul class="hidden lg:flex items-center gap-10 text-[11px] tracking-[0.25em] uppercase font-medium text-gray-400">
-        <li><a href="index.html" class="text-gold-500 hover:text-gold-400 transition-colors duration-300">Home</a></li>
-        <li><a href="about.html" class="hover:text-gold-500 transition-colors duration-300">About</a></li>
+        <li><a href="index.html" class="text-gold-500 hover:text-gold-400 transition-colors duration-300" data-i18n="nav-home">Home</a></li>
+        <li><a href="about.html" class="hover:text-gold-500 transition-colors duration-300" data-i18n="nav-about">About</a></li>
         <li><a href="menu.html" class="hover:text-gold-500 transition-colors duration-300">Menu</a></li>
-        <li><a href="reservations.html" class="hover:text-gold-500 transition-colors duration-300">Reservations</a></li>
+        <li><a href="reservations.html" class="hover:text-gold-500 transition-colors duration-300" data-i18n="nav-reservations">Reservations</a></li>
         <li><a href="ambiance.html" class="hover:text-gold-500 transition-colors duration-300">Ambiance</a></li>
         <li><a href="blog.html" class="hover:text-gold-500 transition-colors duration-300">Blog</a></li>
     </ul>
-    <a href="reservations.html" class="hidden lg:block magnetic-btn border border-gold-500 text-gold-500 px-7 py-3 text-[10px] tracking-[0.3em] uppercase font-semibold"><span>Reserve</span></a>
+    <div class="hidden lg:flex items-center gap-4">
+        <button type="button" class="lang-toggle text-[10px] tracking-[0.2em] uppercase font-semibold border border-gold-500/30 px-3 py-1.5 rounded-sm transition-all hover:border-gold-500" id="langToggle" aria-label="Switch language"><span class="text-gold-500">EN</span><span class="text-gray-500 mx-1">/</span><span class="text-gray-500">FR</span></button>
+        <a href="reservations.html" class="magnetic-btn border border-gold-500 text-gold-500 px-7 py-3 text-[10px] tracking-[0.3em] uppercase font-semibold"><span data-i18n="nav-reserve">Reserve</span></a>
+    </div>
+    <button type="button" class="lang-toggle-mobile lg:hidden inline-flex items-center gap-1.5 text-[10px] tracking-[0.2em] uppercase font-semibold border border-gold-500/40 px-2.5 py-1.5 rounded-sm mr-3" id="langToggleHeader" aria-label="Switch language"><svg class="w-3.5 h-3.5 text-gold-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" d="M3 12h18M12 3a13.5 13.5 0 010 18M12 3a13.5 13.5 0 000 18"/></svg><span class="text-gold-500">EN</span><span class="text-gray-500">/</span><span class="text-gray-500">FR</span></button>
     <button class="lg:hidden text-gold-500 z-[999] relative" id="menuToggle" aria-label="Menu">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6" id="line1" style="transition:all 0.4s"/><line x1="3" y1="12" x2="21" y2="12" id="line2" style="transition:all 0.4s"/><line x1="3" y1="18" x2="21" y2="18" id="line3" style="transition:all 0.4s"/></svg>
     </button>
@@ -183,14 +202,15 @@
 
 <!-- Mobile Menu -->
 <div class="mobile-menu" id="mobileMenu">
-    <a href="index.html" class="font-serif text-3xl text-gold-500 tracking-widest">Home</a>
-    <a href="about.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest">About</a>
+    <a href="index.html" class="font-serif text-3xl text-gold-500 tracking-widest" data-i18n="nav-home">Home</a>
+    <a href="about.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest" data-i18n="nav-about">About</a>
     <a href="menu.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest">Menu</a>
-    <a href="reservations.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest">Reservations</a>
+    <a href="reservations.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest" data-i18n="nav-reservations">Reservations</a>
     <a href="ambiance.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest">Ambiance</a>
     <a href="blog.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest">Blog</a>
+    <button type="button" class="lang-toggle-mobile text-sm tracking-[0.2em] uppercase font-semibold border border-gold-500/30 px-6 py-3 rounded-sm text-gold-500" id="langToggleMobile"><span class="text-gold-500">EN</span><span class="text-gray-500 mx-2">/</span><span class="text-gray-500">FR</span></button>
     <div class="mt-8">
-        <a href="reservations.html" class="border border-gold-500 text-gold-500 px-10 py-4 text-xs tracking-[0.3em] uppercase hover:bg-gold-500 hover:text-night transition-all">Reserve a Table</a>
+        <a href="reservations.html" class="border border-gold-500 text-gold-500 px-10 py-4 text-xs tracking-[0.3em] uppercase hover:bg-gold-500 hover:text-night transition-all" data-i18n="nav-reserve-table">Reserve a Table</a>
     </div>
 </div>
 
@@ -218,19 +238,19 @@
         </h1>
         <div class="flex items-center justify-center gap-6 mb-8 reveal-up" id="heroDivider">
             <div class="w-16 md:w-24 h-[1px] bg-gold-500/50"></div>
-            <p class="font-accent text-xl md:text-2xl text-gray-300 italic tracking-wide">Bar & Restaurant</p>
+            <p class="font-accent text-xl md:text-2xl text-gray-300 italic tracking-wide" data-i18n="hero-subtitle">Bar & Restaurant</p>
             <div class="w-16 md:w-24 h-[1px] bg-gold-500/50"></div>
         </div>
-        <p class="font-sans text-gray-400 tracking-[0.3em] text-[10px] md:text-xs uppercase mb-12 reveal-up" id="heroTag">Authentic Island Flavors & Good Vibes</p>
+        <p class="font-sans text-gray-400 tracking-[0.3em] text-[10px] md:text-xs uppercase mb-12 reveal-up" id="heroTag" data-i18n="hero-tag">Authentic Island Flavors & Good Vibes</p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center reveal-up" id="heroCTA">
-            <a href="menu.html" class="magnetic-btn border border-gold-500 text-gold-500 px-10 py-4 text-[10px] tracking-[0.3em] uppercase font-semibold"><span>Explore Menu</span></a>
-            <a href="reservations.html" class="magnetic-btn bg-gold-500 text-deep px-10 py-4 text-[10px] tracking-[0.3em] uppercase font-bold"><span>Reserve a Table</span></a>
+            <a href="menu.html" class="magnetic-btn border border-gold-500 text-gold-500 px-10 py-4 text-[10px] tracking-[0.3em] uppercase font-semibold"><span data-i18n="hero-menu">Explore Menu</span></a>
+            <a href="reservations.html" class="magnetic-btn bg-gold-500 text-deep px-10 py-4 text-[10px] tracking-[0.3em] uppercase font-bold"><span data-i18n="hero-reserve">Reserve a Table</span></a>
         </div>
     </div>
 
     <!-- Scroll indicator -->
     <div class="absolute bottom-16 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center reveal-up" id="scrollHint">
-        <span class="text-[10px] tracking-[0.4em] uppercase text-gold-500/60 mb-4">Scroll</span>
+        <span class="text-[10px] tracking-[0.4em] uppercase text-gold-500/60 mb-4" data-i18n="scroll">Scroll</span>
         <div class="w-[1px] h-12 relative overflow-hidden">
             <div class="absolute inset-0 bg-gold-500/30"></div>
             <div class="absolute top-0 w-full h-1/2 bg-gold-500 animate-pulse" style="animation:scrollLine 2s ease-in-out infinite"></div>
@@ -242,35 +262,35 @@
 <div class="py-6 border-y border-gold-500/10 overflow-hidden bg-deep">
     <div class="marquee-track">
         <div class="flex items-center gap-8 shrink-0 px-4">
-            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Caribbean Cuisine</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="m1">Caribbean Cuisine</span>
             <span class="text-gold-700">&#9670;</span>
-            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Craft Cocktails</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="m2">Craft Cocktails</span>
             <span class="text-gold-700">&#9670;</span>
-            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Live DJ Sessions</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="m3">Live DJ Sessions</span>
             <span class="text-gold-700">&#9670;</span>
-            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Sandy Ground Vibes</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="m4">Sandy Ground Vibes</span>
             <span class="text-gold-700">&#9670;</span>
-            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Island Flavors</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="m5">Island Flavors</span>
             <span class="text-gold-700">&#9670;</span>
-            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Weekend Events</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="m6">Weekend Events</span>
             <span class="text-gold-700">&#9670;</span>
-            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Open Air Dining</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="m7">Open Air Dining</span>
             <span class="text-gold-700">&#9670;</span>
         </div>
         <div class="flex items-center gap-8 shrink-0 px-4" aria-hidden="true">
-            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Caribbean Cuisine</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="m1">Caribbean Cuisine</span>
             <span class="text-gold-700">&#9670;</span>
-            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Craft Cocktails</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="m2">Craft Cocktails</span>
             <span class="text-gold-700">&#9670;</span>
-            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Live DJ Sessions</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="m3">Live DJ Sessions</span>
             <span class="text-gold-700">&#9670;</span>
-            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Sandy Ground Vibes</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="m4">Sandy Ground Vibes</span>
             <span class="text-gold-700">&#9670;</span>
-            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Island Flavors</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="m5">Island Flavors</span>
             <span class="text-gold-700">&#9670;</span>
-            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Weekend Events</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="m6">Weekend Events</span>
             <span class="text-gold-700">&#9670;</span>
-            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Open Air Dining</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="m7">Open Air Dining</span>
             <span class="text-gold-700">&#9670;</span>
         </div>
     </div>
@@ -284,27 +304,27 @@
         <div class="w-full lg:w-5/12 space-y-8 z-10">
             <div class="flex items-center gap-4 reveal-up">
                 <div class="w-12 h-[1px] bg-gold-500 line-reveal"></div>
-                <p class="text-gold-500 tracking-[0.3em] uppercase text-[10px] font-semibold">Our Story</p>
+                <p class="text-gold-500 tracking-[0.3em] uppercase text-[10px] font-semibold" data-i18n="story-label">Our Story</p>
             </div>
-            <h2 class="font-serif text-4xl md:text-6xl text-white leading-[1.1] reveal-up">Live the<br><span class="text-gold-500 italic font-accent text-5xl md:text-7xl">Caribbean Soul.</span></h2>
-            <p class="text-gray-400 leading-relaxed font-light text-base reveal-up">The heart of Saint Martin beats right here. Located just past the Sandy Ground bridge, Triple R is where the island comes alive. Picture the perfect mix: hypnotic DJ sets blending with the irresistible aroma of masterful Caribbean cuisine.</p>
-            <p class="text-gray-500 leading-relaxed font-light text-sm reveal-up">It's the ultimate spot to chill, eat well, and soak in the true island vibe. From oxtail to fresh crepes, from aged rum to craft cocktails &mdash; every moment here is a memory in the making.</p>
+            <h2 class="font-serif text-4xl md:text-6xl text-white leading-[1.1] reveal-up" data-i18n="story-title">Live the<br><span class="text-gold-500 italic font-accent text-5xl md:text-7xl">Caribbean Soul.</span></h2>
+            <p class="text-gray-400 leading-relaxed font-light text-base reveal-up" data-i18n="story-p1">The heart of Saint Martin beats right here. Located just past the Sandy Ground bridge, Triple R is where the island comes alive. Picture the perfect mix: hypnotic DJ sets blending with the irresistible aroma of masterful Caribbean cuisine.</p>
+            <p class="text-gray-500 leading-relaxed font-light text-sm reveal-up" data-i18n="story-p2">It's the ultimate spot to chill, eat well, and soak in the true island vibe. From oxtail to fresh crepes, from aged rum to craft cocktails &mdash; every moment here is a memory in the making.</p>
             <div class="flex flex-wrap gap-6 sm:gap-12 pt-6 reveal-up">
                 <div class="text-center">
                     <p class="font-serif text-5xl text-gold-500 gold-glow counter" data-target="150">0</p>
-                    <p class="text-gray-600 text-[10px] tracking-[0.2em] uppercase mt-2">Menu Items</p>
+                    <p class="text-gray-600 text-[10px] tracking-[0.2em] uppercase mt-2" data-i18n="stat-menu">Menu Items</p>
                 </div>
                 <div class="text-center">
                     <p class="font-serif text-5xl text-gold-500 gold-glow counter" data-target="10">0</p>
-                    <p class="text-gray-600 text-[10px] tracking-[0.2em] uppercase mt-2">Cocktails</p>
+                    <p class="text-gray-600 text-[10px] tracking-[0.2em] uppercase mt-2" data-i18n="stat-cocktails">Cocktails</p>
                 </div>
                 <div class="text-center">
                     <p class="font-serif text-5xl text-gold-500 gold-glow">2017</p>
-                    <p class="text-gray-600 text-[10px] tracking-[0.2em] uppercase mt-2">Established</p>
+                    <p class="text-gray-600 text-[10px] tracking-[0.2em] uppercase mt-2" data-i18n="stat-est">Established</p>
                 </div>
             </div>
             <div class="pt-4 reveal-up">
-                <a href="about.html" class="magnetic-btn border border-gold-500 text-gold-500 px-8 py-3 text-[10px] tracking-[0.3em] uppercase font-semibold inline-block"><span>Discover More</span></a>
+                <a href="about.html" class="magnetic-btn border border-gold-500 text-gold-500 px-8 py-3 text-[10px] tracking-[0.3em] uppercase font-semibold inline-block"><span data-i18n="story-cta">Discover More</span></a>
             </div>
         </div>
         <!-- Image -->
@@ -331,10 +351,10 @@
         <div class="text-center mb-20">
             <div class="flex items-center justify-center gap-4 mb-6 reveal-up">
                 <div class="w-12 h-[1px] bg-gold-500/50"></div>
-                <p class="text-gold-500 tracking-[0.3em] uppercase text-[10px] font-semibold">Taste of Triple R</p>
+                <p class="text-gold-500 tracking-[0.3em] uppercase text-[10px] font-semibold" data-i18n="dishes-label">Taste of Triple R</p>
                 <div class="w-12 h-[1px] bg-gold-500/50"></div>
             </div>
-            <h2 class="font-serif text-4xl md:text-6xl text-white reveal-up">Signature <span class="italic font-accent text-gray-400">Plates</span></h2>
+            <h2 class="font-serif text-4xl md:text-6xl text-white reveal-up" data-i18n="dishes-title">Signature <span class="italic font-accent text-gray-400">Plates</span></h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -345,8 +365,8 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-deep via-transparent to-transparent"></div>
                 </div>
                 <div class="absolute bottom-0 left-0 right-0 p-5">
-                    <h4 class="font-serif text-lg text-white group-hover:text-gold-500 transition-colors">Stew Turkey</h4>
-                    <p class="text-gray-500 text-xs mt-1">White rice, steamed vegetables, lentil peas</p>
+                    <h4 class="font-serif text-lg text-white group-hover:text-gold-500 transition-colors" data-i18n="d1-name">Stew Turkey</h4>
+                    <p class="text-gray-500 text-xs mt-1" data-i18n="d1-desc">White rice, steamed vegetables, lentil peas</p>
                 </div>
             </div>
             <!-- Dish 2 -->
@@ -356,8 +376,8 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-deep via-transparent to-transparent"></div>
                 </div>
                 <div class="absolute bottom-0 left-0 right-0 p-5">
-                    <h4 class="font-serif text-lg text-white group-hover:text-gold-500 transition-colors">Fresh Pasta</h4>
-                    <p class="text-gray-500 text-xs mt-1">Handcrafted with Caribbean spices</p>
+                    <h4 class="font-serif text-lg text-white group-hover:text-gold-500 transition-colors" data-i18n="d2-name">Fresh Pasta</h4>
+                    <p class="text-gray-500 text-xs mt-1" data-i18n="d2-desc">Handcrafted with Caribbean spices</p>
                 </div>
             </div>
             <!-- Dish 3: NEW - Chicken Wings -->
@@ -367,8 +387,8 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-deep via-transparent to-transparent"></div>
                 </div>
                 <div class="absolute bottom-0 left-0 right-0 p-5">
-                    <h4 class="font-serif text-lg text-white group-hover:text-gold-500 transition-colors">Chicken Wings</h4>
-                    <p class="text-gray-500 text-xs mt-1">Crispy wings with golden fries</p>
+                    <h4 class="font-serif text-lg text-white group-hover:text-gold-500 transition-colors" data-i18n="d3-name">Chicken Wings</h4>
+                    <p class="text-gray-500 text-xs mt-1" data-i18n="d3-desc">Crispy wings with golden fries</p>
                 </div>
             </div>
             <!-- Dish 4 -->
@@ -378,8 +398,8 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-deep via-transparent to-transparent"></div>
                 </div>
                 <div class="absolute bottom-0 left-0 right-0 p-5">
-                    <h4 class="font-serif text-lg text-white group-hover:text-gold-500 transition-colors">Stew Beef</h4>
-                    <p class="text-gray-500 text-xs mt-1">Fried rice & baked macaroni</p>
+                    <h4 class="font-serif text-lg text-white group-hover:text-gold-500 transition-colors" data-i18n="d4-name">Stew Beef</h4>
+                    <p class="text-gray-500 text-xs mt-1" data-i18n="d4-desc">Fried rice & baked macaroni</p>
                 </div>
             </div>
             <!-- Dish 5 -->
@@ -390,7 +410,7 @@
                 </div>
                 <div class="absolute bottom-0 left-0 right-0 p-5">
                     <h4 class="font-serif text-lg text-white group-hover:text-gold-500 transition-colors">Mix Tapas</h4>
-                    <p class="text-gray-500 text-xs mt-1">A curated selection to share</p>
+                    <p class="text-gray-500 text-xs mt-1" data-i18n="d5-desc">A curated selection to share</p>
                 </div>
             </div>
             <!-- Dish 6: Friday Madness -->
@@ -401,13 +421,13 @@
                 </div>
                 <div class="absolute bottom-0 left-0 right-0 p-5">
                     <h4 class="font-serif text-lg text-white group-hover:text-gold-500 transition-colors">Friday Madness</h4>
-                    <p class="text-gray-500 text-xs mt-1">Our legendary Friday special</p>
+                    <p class="text-gray-500 text-xs mt-1" data-i18n="d6-desc">Our legendary Friday special</p>
                 </div>
             </div>
         </div>
 
         <div class="text-center mt-16 reveal-up">
-            <a href="menu.html" class="magnetic-btn border border-gold-500 text-gold-500 px-10 py-4 text-[10px] tracking-[0.3em] uppercase font-semibold inline-block"><span>View Full Menu</span></a>
+            <a href="menu.html" class="magnetic-btn border border-gold-500 text-gold-500 px-10 py-4 text-[10px] tracking-[0.3em] uppercase font-semibold inline-block"><span data-i18n="dishes-cta">View Full Menu</span></a>
         </div>
     </div>
 </section>
@@ -424,10 +444,10 @@
     <div class="absolute bottom-0 left-0 right-0 h-[12vh] bg-gradient-to-t from-deep to-transparent z-[3]"></div>
 
     <div class="relative z-10 text-center px-4 max-w-4xl">
-        <p class="text-gold-500 tracking-[0.4em] uppercase text-[10px] mb-6 reveal-up">Every Weekend</p>
-        <h2 class="font-serif text-5xl md:text-8xl text-white leading-[0.95] mb-6 reveal-up">Where the Beat<br>Meets the <span class="italic text-gold-500">Heat</span></h2>
-        <p class="text-gray-400 text-base md:text-lg font-light max-w-xl mx-auto mb-10 reveal-up">Every weekend, Triple R transforms into the epicenter of Saint Martin's nightlife. Live DJ sets, Caribbean fusion, and the island's finest cocktails.</p>
-        <a href="ambiance.html" class="magnetic-btn border border-white/30 text-white px-10 py-4 text-[10px] tracking-[0.3em] uppercase font-semibold inline-block reveal-up"><span>Experience the Vibe</span></a>
+        <p class="text-gold-500 tracking-[0.4em] uppercase text-[10px] mb-6 reveal-up" data-i18n="vid-label">Every Weekend</p>
+        <h2 class="font-serif text-5xl md:text-8xl text-white leading-[0.95] mb-6 reveal-up" data-i18n="vid-title">Where the Beat<br>Meets the <span class="italic text-gold-500">Heat</span></h2>
+        <p class="text-gray-400 text-base md:text-lg font-light max-w-xl mx-auto mb-10 reveal-up" data-i18n="vid-p">Every weekend, Triple R transforms into the epicenter of Saint Martin's nightlife. Live DJ sets, Caribbean fusion, and the island's finest cocktails.</p>
+        <a href="ambiance.html" class="magnetic-btn border border-white/30 text-white px-10 py-4 text-[10px] tracking-[0.3em] uppercase font-semibold inline-block reveal-up"><span data-i18n="vid-cta">Experience the Vibe</span></a>
     </div>
 </section>
 
@@ -438,11 +458,11 @@
             <div>
                 <div class="flex items-center gap-4 mb-6 reveal-up">
                     <div class="w-12 h-[1px] bg-gold-500/50"></div>
-                    <p class="text-gold-500 tracking-[0.3em] uppercase text-[10px] font-semibold">Gallery</p>
+                    <p class="text-gold-500 tracking-[0.3em] uppercase text-[10px] font-semibold" data-i18n="gal-label">Gallery</p>
                 </div>
-                <h2 class="font-serif text-4xl md:text-6xl text-white reveal-up">Moments at <span class="italic font-accent text-gold-500">Triple R</span></h2>
+                <h2 class="font-serif text-4xl md:text-6xl text-white reveal-up" data-i18n="gal-title">Moments at <span class="italic font-accent text-gold-500">Triple R</span></h2>
             </div>
-            <a href="ambiance.html" class="hidden md:block text-gold-500 text-xs tracking-[0.2em] uppercase hover:text-gold-400 transition-colors reveal-up">View All &rarr;</a>
+            <a href="ambiance.html" class="hidden md:block text-gold-500 text-xs tracking-[0.2em] uppercase hover:text-gold-400 transition-colors reveal-up" data-i18n="gal-all">View All &rarr;</a>
         </div>
     </div>
     <div class="horizontal-section">
@@ -451,37 +471,37 @@
                 <div class="overflow-hidden aspect-[3/4] rounded-sm border border-gold-500/10">
                     <img src="pictures & videos/insideLook.TripleRBar.jpeg" alt="Inside Look" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                 </div>
-                <p class="text-gray-500 text-xs mt-4 tracking-widest uppercase">Inside Look</p>
+                <p class="text-gray-500 text-xs mt-4 tracking-widest uppercase" data-i18n="gal-1">Inside Look</p>
             </div>
             <div class="shrink-0 w-[280px] sm:w-[350px] md:w-[450px] group mt-16">
                 <div class="overflow-hidden aspect-[3/4] rounded-sm border border-gold-500/10">
                     <img src="pictures & videos/client chilling at the bar.jpeg" alt="Chilling at the Bar" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                 </div>
-                <p class="text-gray-500 text-xs mt-4 tracking-widest uppercase">Chilling at the Bar</p>
+                <p class="text-gray-500 text-xs mt-4 tracking-widest uppercase" data-i18n="gal-2">Chilling at the Bar</p>
             </div>
             <div class="shrink-0 w-[280px] sm:w-[350px] md:w-[450px] group">
                 <div class="overflow-hidden aspect-[3/4] rounded-sm border border-gold-500/10">
-                    <img src="pictures & videos/DISH.jpeg" alt="Signature Dish" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <img src="pictures & videos/Girls eating.jpeg" alt="Girls Eating" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                 </div>
-                <p class="text-gray-500 text-xs mt-4 tracking-widest uppercase">Signature Dish</p>
+                <p class="text-gray-500 text-xs mt-4 tracking-widest uppercase" data-i18n="gal-3">Girls Eating</p>
             </div>
             <div class="shrink-0 w-[280px] sm:w-[350px] md:w-[450px] group mt-16">
                 <div class="overflow-hidden aspect-[3/4] rounded-sm border border-gold-500/10">
                     <img src="pictures & videos/fada with a client.jpeg" alt="Good Vibes" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                 </div>
-                <p class="text-gray-500 text-xs mt-4 tracking-widest uppercase">Good Vibes</p>
+                <p class="text-gray-500 text-xs mt-4 tracking-widest uppercase" data-i18n="gal-4">Good Vibes</p>
             </div>
             <div class="shrink-0 w-[280px] sm:w-[350px] md:w-[450px] group">
                 <div class="overflow-hidden aspect-[3/4] rounded-sm border border-gold-500/10">
-                    <img src="pictures & videos/insideLook.TripleRBar.jpeg" alt="The Atmosphere" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <img src="pictures & videos/Clients Drinking Bwa Kalé Energy Drink.jpeg" alt="Clients Drinking Bwa Kalé Energy Drink" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                 </div>
-                <p class="text-gray-500 text-xs mt-4 tracking-widest uppercase">The Atmosphere</p>
+                <p class="text-gray-500 text-xs mt-4 tracking-widest uppercase" data-i18n="gal-5">Bwa Kalé Energy</p>
             </div>
             <div class="shrink-0 w-[280px] sm:w-[350px] md:w-[450px] group mt-16">
                 <div class="overflow-hidden aspect-[3/4] rounded-sm border border-gold-500/10">
                     <img src="pictures & videos/client eating a crèpe.jpeg" alt="Crêpe Time" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                 </div>
-                <p class="text-gray-500 text-xs mt-4 tracking-widest uppercase">Crêpe Time</p>
+                <p class="text-gray-500 text-xs mt-4 tracking-widest uppercase" data-i18n="gal-6">Crêpe Time</p>
             </div>
         </div>
     </div>
@@ -494,12 +514,12 @@
         <div class="absolute inset-0 bg-gradient-to-b from-deep via-deep/70 to-deep"></div>
     </div>
     <div class="relative z-10 text-center px-4 max-w-3xl mx-auto">
-        <p class="text-gold-500 tracking-[0.4em] uppercase text-[10px] mb-6 reveal-up">Join Us</p>
-        <h2 class="font-serif text-5xl md:text-8xl text-white leading-[0.95] mb-8 reveal-up">Your Table<br><span class="italic font-accent text-gold-500">Awaits.</span></h2>
-        <p class="text-gray-400 text-base font-light mb-12 reveal-up">Book your spot for an unforgettable evening of Caribbean cuisine, craft cocktails, and island vibes under the stars.</p>
+        <p class="text-gold-500 tracking-[0.4em] uppercase text-[10px] mb-6 reveal-up" data-i18n="cta-label">Join Us</p>
+        <h2 class="font-serif text-5xl md:text-8xl text-white leading-[0.95] mb-8 reveal-up" data-i18n="cta-title">Your Table<br><span class="italic font-accent text-gold-500">Awaits.</span></h2>
+        <p class="text-gray-400 text-base font-light mb-12 reveal-up" data-i18n="cta-p">Book your spot for an unforgettable evening of Caribbean cuisine, craft cocktails, and island vibes under the stars.</p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center reveal-up">
-            <a href="reservations.html" class="magnetic-btn bg-gold-500 text-deep px-12 py-5 text-[10px] tracking-[0.3em] uppercase font-bold inline-block"><span>Reserve Now</span></a>
-            <a href="menu.html" class="magnetic-btn border border-white/20 text-white px-12 py-5 text-[10px] tracking-[0.3em] uppercase font-semibold inline-block"><span>See the Menu</span></a>
+            <a href="reservations.html" class="magnetic-btn bg-gold-500 text-deep px-12 py-5 text-[10px] tracking-[0.3em] uppercase font-bold inline-block"><span data-i18n="cta-reserve">Reserve Now</span></a>
+            <a href="menu.html" class="magnetic-btn border border-white/20 text-white px-12 py-5 text-[10px] tracking-[0.3em] uppercase font-semibold inline-block"><span data-i18n="cta-menu">See the Menu</span></a>
         </div>
     </div>
 </section>
@@ -510,10 +530,10 @@
         <div class="text-center mb-20">
             <div class="flex items-center justify-center gap-4 mb-6 reveal-up">
                 <div class="w-12 h-[1px] bg-gold-500/50"></div>
-                <p class="text-gold-500 tracking-[0.3em] uppercase text-[10px] font-semibold">From the Blog</p>
+                <p class="text-gold-500 tracking-[0.3em] uppercase text-[10px] font-semibold" data-i18n="blog-label">From the Blog</p>
                 <div class="w-12 h-[1px] bg-gold-500/50"></div>
             </div>
-            <h2 class="font-serif text-4xl md:text-5xl text-white reveal-up">Stories & <span class="italic font-accent text-gray-400">Flavors</span></h2>
+            <h2 class="font-serif text-4xl md:text-5xl text-white reveal-up" data-i18n="blog-title">Stories & <span class="italic font-accent text-gray-400">Flavors</span></h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
             <a href="blog.html#post1" class="blog-card group block reveal-up">
@@ -521,28 +541,28 @@
                     <video src="pictures & videos/design.front.triple r bar restaurant.mp4" autoplay muted loop playsinline class="w-full h-full object-cover blog-img"></video>
                 </div>
                 <div class="flex items-center gap-4 mb-3">
-                    <span class="text-gold-500 text-[10px] tracking-[0.2em] uppercase font-semibold">Culture</span>
+                    <span class="text-gold-500 text-[10px] tracking-[0.2em] uppercase font-semibold" data-i18n="blog-cat1">Culture</span>
                     <span class="text-gray-700 text-[10px]">|</span>
                     <span class="text-gray-600 text-[10px] tracking-wider">April 5, 2026</span>
                 </div>
-                <h3 class="font-serif text-2xl text-white group-hover:text-gold-500 transition-colors leading-snug">The Soul of Sandy Ground: How Triple R Became the Island's Living Room</h3>
-                <p class="text-gray-500 text-sm mt-3 font-light leading-relaxed">From a humble beachside bar to the beating heart of Saint Martin's nightlife &mdash; the story behind the vibe.</p>
+                <h3 class="font-serif text-2xl text-white group-hover:text-gold-500 transition-colors leading-snug" data-i18n="blog-t1">The Soul of Sandy Ground: How Triple R Became the Island's Living Room</h3>
+                <p class="text-gray-500 text-sm mt-3 font-light leading-relaxed" data-i18n="blog-d1">From a humble beachside bar to the beating heart of Saint Martin's nightlife &mdash; the story behind the vibe.</p>
             </a>
             <a href="blog.html#post2" class="blog-card group block reveal-up md:translate-y-12">
                 <div class="overflow-hidden aspect-[16/10] rounded-sm border border-gold-500/10 mb-6">
-                    <img src="pictures & videos/DISH.jpeg" alt="Blog Post" class="w-full h-full object-cover blog-img">
+                    <img src="pictures & videos/Triple R Dish.png" alt="Triple R Signature Dish" class="w-full h-full object-cover blog-img">
                 </div>
                 <div class="flex items-center gap-4 mb-3">
-                    <span class="text-gold-500 text-[10px] tracking-[0.2em] uppercase font-semibold">Gastronomy</span>
+                    <span class="text-gold-500 text-[10px] tracking-[0.2em] uppercase font-semibold" data-i18n="blog-cat2">Gastronomy</span>
                     <span class="text-gray-700 text-[10px]">|</span>
                     <span class="text-gray-600 text-[10px] tracking-wider">March 22, 2026</span>
                 </div>
-                <h3 class="font-serif text-2xl text-white group-hover:text-gold-500 transition-colors leading-snug">Caribbean Fusion: 5 Dishes That Tell Our Story</h3>
-                <p class="text-gray-500 text-sm mt-3 font-light leading-relaxed">A culinary journey through the flavors that define Triple R &mdash; from oxtail to our legendary crepes.</p>
+                <h3 class="font-serif text-2xl text-white group-hover:text-gold-500 transition-colors leading-snug" data-i18n="blog-t2">Caribbean Fusion: 5 Dishes That Tell Our Story</h3>
+                <p class="text-gray-500 text-sm mt-3 font-light leading-relaxed" data-i18n="blog-d2">A culinary journey through the flavors that define Triple R &mdash; from oxtail to our legendary crepes.</p>
             </a>
         </div>
         <div class="text-center mt-16 reveal-up">
-            <a href="blog.html" class="text-gold-500 text-xs tracking-[0.2em] uppercase hover:text-gold-400 transition-colors">Read All Posts &rarr;</a>
+            <a href="blog.html" class="text-gold-500 text-xs tracking-[0.2em] uppercase hover:text-gold-400 transition-colors" data-i18n="blog-cta">Read All Posts &rarr;</a>
         </div>
     </div>
 </section>
@@ -553,7 +573,7 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-16">
             <div class="md:col-span-2">
                 <h3 class="font-serif text-3xl text-white mb-4">Triple R</h3>
-                <p class="text-gray-500 font-light text-sm leading-relaxed max-w-md">The heart of Sandy Ground. Caribbean cuisine, craft cocktails, and unforgettable vibes on the island of Saint Martin.</p>
+                <p class="text-gray-500 font-light text-sm leading-relaxed max-w-md" data-i18n="foot-desc">The heart of Sandy Ground. Caribbean cuisine, craft cocktails, and unforgettable vibes on the island of Saint Martin.</p>
                 <div class="flex gap-4 mt-6">
                     <a href="#" class="w-10 h-10 border border-gold-500/20 flex items-center justify-center text-gold-500 hover:bg-gold-500 hover:text-deep transition-all rounded-sm" aria-label="Instagram">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
@@ -564,31 +584,48 @@
                     <a href="#" class="w-10 h-10 border border-gold-500/20 flex items-center justify-center text-gold-500 hover:bg-gold-500 hover:text-deep transition-all rounded-sm" aria-label="TikTok">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
                     </a>
+                    <a href="https://earth.google.com/web/search/31+rue+de+Sandy+Ground,+97150+Saint+Martin" target="_blank" rel="noopener noreferrer" class="w-10 h-10 border border-gold-500/20 flex items-center justify-center text-gold-500 hover:bg-gold-500 hover:text-deep transition-all rounded-sm" aria-label="Google Earth">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 2c1.538 0 2.99.35 4.29.97l-2.29 2.29-2 2.74-3.45 1.5-2.37-2.37A9.97 9.97 0 0112 2zm-5.53 5.88l1.76 1.76-1.09 2.51H3.5l-1.14-1.14a10.03 10.03 0 014.11-3.13zM2 12c0-.34.02-.68.05-1.01H6.1l1.31 1.3-2.55 3.19-2.01.5A9.95 9.95 0 012 12zm7.5 9.5l-.5-2.5 1.5-2 4-.5 2.5 2.5v1.5a10 10 0 01-7.5 1zm9.5-1.94l-2.38-2.38-4.12.52-1.5 2 .5 2.3A10 10 0 0019 19.56zM22 12c0 .85-.11 1.68-.31 2.47l-3.19-.8-2.5-2.17-1-3 2.5-2.76 3.95 1.16c.35 1.03.55 2.15.55 3.3z"/></svg>
+                    </a>
                 </div>
+                <div class="mt-6">
+                    <p class="font-serif text-gold-500 text-[10px] tracking-[0.35em] uppercase mb-3" data-i18n="foot-map">Find Us</p>
+                    <a href="https://maps.app.goo.gl/s2wLVGQDi7BpRMzL6" target="_blank" rel="noopener noreferrer" class="block relative overflow-hidden rounded-sm border border-gold-500/20 hover:border-gold-500/60 transition-all group" style="aspect-ratio:16/9;max-width:360px" aria-label="Open in Google Maps">
+                        <iframe src="https://maps.app.goo.gl/s2wLVGQDi7BpRMzL6" class="w-full h-full pointer-events-none" style="border:0;filter:grayscale(.3) contrast(.95)" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Triple R Bar Restaurant location"></iframe>
+                        <div class="absolute inset-0 bg-deep/0 group-hover:bg-deep/20 transition-all flex items-center justify-center">
+                            <div class="opacity-0 group-hover:opacity-100 transition-opacity bg-gold-500 text-deep px-3 py-1.5 rounded-sm text-[9px] tracking-[0.25em] uppercase font-bold">
+                                <span data-i18n="foot-map">Find Us</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
             </div>
             <div>
-                <h4 class="font-serif text-gold-500 text-sm tracking-widest uppercase mb-6">Navigate</h4>
+                <h4 class="font-serif text-gold-500 text-sm tracking-widest uppercase mb-6" data-i18n="foot-nav">Navigate</h4>
                 <ul class="space-y-3">
-                    <li><a href="index.html" class="text-gray-400 text-sm hover:text-gold-500 transition-colors">Home</a></li>
-                    <li><a href="about.html" class="text-gray-400 text-sm hover:text-gold-500 transition-colors">About Us</a></li>
-                    <li><a href="menu.html" class="text-gray-400 text-sm hover:text-gold-500 transition-colors">Menu</a></li>
-                    <li><a href="reservations.html" class="text-gray-400 text-sm hover:text-gold-500 transition-colors">Reservations</a></li>
-                    <li><a href="ambiance.html" class="text-gray-400 text-sm hover:text-gold-500 transition-colors">Ambiance</a></li>
-                    <li><a href="blog.html" class="text-gray-400 text-sm hover:text-gold-500 transition-colors">Blog</a></li>
+                    <li><a href="index.html" class="text-gray-400 text-sm hover:text-gold-500 transition-colors" data-i18n="foot-home">Home</a></li>
+                    <li><a href="about.html" class="text-gray-400 text-sm hover:text-gold-500 transition-colors" data-i18n="foot-about">About Us</a></li>
+                    <li><a href="menu.html" class="text-gray-400 text-sm hover:text-gold-500 transition-colors" data-i18n="foot-menu">Menu</a></li>
+                    <li><a href="reservations.html" class="text-gray-400 text-sm hover:text-gold-500 transition-colors" data-i18n="foot-reservations">Reservations</a></li>
+                    <li><a href="ambiance.html" class="text-gray-400 text-sm hover:text-gold-500 transition-colors" data-i18n="foot-ambiance">Ambiance</a></li>
+                    <li><a href="blog.html" class="text-gray-400 text-sm hover:text-gold-500 transition-colors" data-i18n="foot-blog">Blog</a></li>
                 </ul>
             </div>
             <div>
-                <h4 class="font-serif text-gold-500 text-sm tracking-widest uppercase mb-6">Visit Us</h4>
+                <h4 class="font-serif text-gold-500 text-sm tracking-widest uppercase mb-6" data-i18n="foot-visit">Visit Us</h4>
                 <ul class="space-y-3 text-gray-400 text-sm font-light">
-                    <li>Sandy Ground<br>Saint Martin 97150</li>
-                    <li class="pt-2">Tue — Sun<br>8:00 AM &mdash; 2:00 AM</li>
-                    <li class="pt-2">Weekend DJ Sessions<br>8:30 PM &mdash; Late</li>
+                    <li data-i18n="foot-address" data-content="address">31 rue de Sandy Ground<br>97150 Saint Martin</li>
+                    <li class="pt-2"><a href="tel:+590690691098" data-content="phone" class="text-gold-500 hover:text-gold-400 transition-colors">+590 690 69 10 98</a></li>
+                    <li class="pt-2"><a href="mailto:triplerbarrestaurant1@gmail.com" class="text-gold-500 hover:text-gold-400 transition-colors break-all">triplerbarrestaurant1@gmail.com</a></li>
+                    <li class="pt-2" data-i18n="foot-hours" data-content="hours">Tue — Sun<br>8:00 AM &mdash; 2:00 AM</li>
+                    <li class="pt-2" data-i18n="foot-dj">Weekend DJ Sessions<br>8:30 PM &mdash; Late</li>
                 </ul>
             </div>
         </div>
         <div class="border-t border-gold-500/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p class="text-gray-600 text-xs tracking-wider">&copy; 2026 Triple R Bar Restaurant. All rights reserved.</p>
-            <p class="text-gray-700 text-[10px] tracking-wider uppercase">Designed with island soul</p>
+            <p class="text-gray-600 text-xs tracking-wider">&copy; 2026 Triple R Bar Restaurant. <span data-i18n="foot-copy">All rights reserved.</span></p>
+            <p class="text-gray-700 text-sm tracking-wider uppercase"><span data-i18n="foot-soul">Designed By <a href="https://www.instagram.com/korekdigitalmarketing/" target="_blank" rel="noopener noreferrer" class="text-gold-500 hover:text-gold-400 transition-colors">Korek Digital Marketing</a></span></p>
         </div>
     </div>
 </footer>
@@ -720,9 +757,9 @@ function initScrollAnimations() {
         });
     });
 
-    // Horizontal gallery scroll
+    // Horizontal gallery scroll (desktop only — mobile uses vertical grid with IO fade-in)
     const track = document.getElementById('galleryTrack');
-    if (track) {
+    if (track && window.innerWidth > 767) {
         const totalWidth = track.scrollWidth - window.innerWidth;
         gsap.to(track, {
             x: -totalWidth,
@@ -736,6 +773,17 @@ function initScrollAnimations() {
                 anticipatePin: 1
             }
         });
+    } else if (track) {
+        // Mobile: quick IntersectionObserver fade-in per tile
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach((e, i) => {
+                if (e.isIntersecting) {
+                    setTimeout(() => e.target.classList.add('in-view'), i * 60);
+                    io.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+        track.querySelectorAll(':scope > div').forEach(tile => io.observe(tile));
     }
 
     // Video section parallax
@@ -763,6 +811,17 @@ window.addEventListener('load', () => {
     setTimeout(initScrollAnimations, 100);
 });
 </script>
-
+<script src="i18n.js"></script>
+<script src="content-loader.js"></script>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("init", function(user) {
+      if (!user) {
+        window.netlifyIdentity.on("login", function() { document.location.href = "/admin/"; });
+      }
+    });
+  }
+</script>
 </body>
 </html>

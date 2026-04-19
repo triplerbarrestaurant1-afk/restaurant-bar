@@ -1,0 +1,49 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "pictures & videos"
+public_folder: "/pictures & videos"
+
+collections:
+  - name: "settings"
+    label: "Restaurant Settings"
+    files:
+      - name: "content"
+        label: "Contact & Hours"
+        file: "_data/content.json"
+        format: json
+        fields:
+          - label: "Phone Number"
+            name: "phone"
+            widget: "string"
+            hint: "e.g. +590 690 69 10 98"
+
+          - label: "Address (English)"
+            name: "address_en"
+            widget: "string"
+
+          - label: "Address (French)"
+            name: "address_fr"
+            widget: "string"
+
+          - label: "Opening Hours (English)"
+            name: "hours_en"
+            widget: "string"
+            hint: "e.g. Tue — Sun · 8:00 AM — 2:00 AM"
+
+          - label: "Opening Hours (French)"
+            name: "hours_fr"
+            widget: "string"
+            hint: "e.g. Mar — Dim · 8h00 — 2h00"
+
+          - label: "Special Announcement"
+            name: "announcement"
+            widget: "string"
+            required: false
+            hint: "Optional — shows a banner on the homepage (leave empty to hide)"
+
+          - label: "Revolut Payment Link"
+            name: "revolut_link"
+            widget: "string"
+            hint: "e.g. https://revolut.me/rosali0avt"

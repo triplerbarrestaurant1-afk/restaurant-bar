@@ -141,7 +141,18 @@
             .magnetic-btn:hover::before{transform:translateY(101%)}
             .cursor-follower{display:none!important}
         }
-    </style>
+        .lang-toggle,.lang-toggle-mobile{cursor:pointer;background:transparent}
+    
+        /* Logo explosive animation */
+        .logo-link{display:inline-block;position:relative}
+        .logo-img{filter:drop-shadow(0 0 0 transparent);transition:filter 0.3s ease}
+        .logo-link:hover .logo-img{filter:drop-shadow(0 0 8px rgba(212,175,55,0.6)) drop-shadow(0 0 20px rgba(212,175,55,0.3))}
+        @keyframes logoExplodeIn{0%{opacity:0;transform:scale(0.3) rotate(-10deg);filter:brightness(3) drop-shadow(0 0 40px rgba(212,175,55,1))}30%{opacity:1;transform:scale(1.2) rotate(3deg);filter:brightness(2) drop-shadow(0 0 30px rgba(212,175,55,0.8))}50%{transform:scale(0.95) rotate(-1deg);filter:brightness(1.5) drop-shadow(0 0 20px rgba(212,175,55,0.5))}70%{transform:scale(1.05) rotate(0.5deg)}100%{transform:scale(1) rotate(0deg);filter:brightness(1) drop-shadow(0 0 0 transparent)}}
+        .logo-explode{animation:logoExplodeIn 1.2s cubic-bezier(0.34,1.56,0.64,1) forwards}
+        @keyframes sparkle{0%,100%{opacity:0;transform:scale(0) translate(0,0)}50%{opacity:1;transform:scale(1)}}
+        .logo-particle{position:absolute;width:4px;height:4px;background:#D4AF37;border-radius:50;pointer-events:none;opacity:0}
+
+        </style>
 </head>
 <body>
 
@@ -159,7 +170,7 @@
 
 <!-- NAV -->
 <nav class="fixed w-full z-[100] glass-nav py-5 px-6 md:px-12 flex justify-between items-center" id="mainNav">
-    <a href="index.html" class="font-serif text-gold-500 text-xl tracking-[0.15em] font-bold uppercase">Triple R</a>
+    <a href="index.html" class="logo-link relative" id="navLogo"><img src="pictures &amp; videos/Triple R Bar Restaurant Logo.png" alt="Triple R Bar Restaurant" class="h-12 md:h-14 w-auto logo-img"></a>
     <ul class="hidden lg:flex items-center gap-10 text-[11px] tracking-[0.25em] uppercase font-medium text-gray-400">
         <li><a href="index.html" class="hover:text-gold-500 transition-colors duration-300">Home</a></li>
         <li><a href="about.html" class="hover:text-gold-500 transition-colors duration-300">About</a></li>
@@ -167,8 +178,10 @@
         <li><a href="reservations.html" class="hover:text-gold-500 transition-colors duration-300">Reservations</a></li>
         <li><a href="ambiance.html" class="hover:text-gold-500 transition-colors duration-300">Ambiance</a></li>
         <li><a href="blog.html" class="hover:text-gold-500 transition-colors duration-300">Blog</a></li>
+        <li><button type="button" class="lang-toggle text-[10px] tracking-[0.2em] uppercase font-semibold border border-gold-500/30 px-3 py-1.5 rounded-sm transition-all hover:border-gold-500" id="langToggle" aria-label="Switch language"><span class="text-gold-500">EN</span><span class="text-gray-500 mx-1">/</span><span class="text-gray-500">FR</span></button></li>
     </ul>
-    <a href="reservations.html" class="hidden lg:block magnetic-btn border border-gold-500 text-gold-500 px-7 py-3 text-[10px] tracking-[0.3em] uppercase font-semibold"><span>Reserve</span></a>
+    <a href="reservations.html" class="hidden lg:block magnetic-btn border border-gold-500 text-gold-500 px-7 py-3 text-[10px] tracking-[0.3em] uppercase font-semibold"><span data-i18n="nav-reserve">Reserve</span></a>
+    <button type="button" class="lang-toggle-mobile lg:hidden inline-flex items-center gap-1.5 text-[10px] tracking-[0.2em] uppercase font-semibold border border-gold-500/40 px-2.5 py-1.5 rounded-sm mr-3" id="langToggleHeader" aria-label="Switch language"><svg class="w-3.5 h-3.5 text-gold-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" d="M3 12h18M12 3a13.5 13.5 0 010 18M12 3a13.5 13.5 0 000 18"/></svg><span class="text-gold-500">EN</span><span class="text-gray-500">/</span><span class="text-gray-500">FR</span></button>
     <button class="lg:hidden text-gold-500 z-[999] relative" id="menuToggle" aria-label="Menu">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <line x1="3" y1="6" x2="21" y2="6" id="line1" style="transition:all 0.4s"/>
@@ -206,10 +219,10 @@
     <!-- Content -->
     <div class="relative z-10 text-center px-4" id="heroContent">
         <p class="font-sans text-gold-500 tracking-[0.55em] uppercase text-[10px] md:text-xs mb-5 reveal-up" id="heroEyebrow">Sandy Ground, Saint Martin</p>
-        <h1 class="font-serif text-6xl sm:text-8xl md:text-9xl font-bold text-white leading-[0.9] gold-glow mb-5 reveal-up" id="heroTitle">Our Menu</h1>
+        <h1 class="font-serif text-6xl sm:text-8xl md:text-9xl font-bold text-white leading-[0.9] gold-glow mb-5 reveal-up" id="heroTitle" data-i18n="menu-title">Our Menu</h1>
         <div class="flex items-center justify-center gap-5 mb-5 reveal-up">
             <div class="w-12 md:w-20 h-[1px] bg-gold-500/50"></div>
-            <p class="font-accent text-xl md:text-2xl text-gray-300 italic tracking-wide">Crafted with Passion</p>
+            <p class="font-accent text-xl md:text-2xl text-gray-300 italic tracking-wide" data-i18n="menu-passion">Crafted with Passion</p>
             <div class="w-12 md:w-20 h-[1px] bg-gold-500/50"></div>
         </div>
         <p class="font-sans text-gray-400 tracking-[0.3em] text-[10px] uppercase reveal-up">Caribbean Flavors &nbsp;&#9670;&nbsp; Fresh Ingredients &nbsp;&#9670;&nbsp; Island Soul</p>
@@ -229,17 +242,17 @@
 <div class="py-5 border-y border-gold-500/10 overflow-hidden bg-deep">
     <div class="marquee-track">
         <div class="flex items-center gap-8 shrink-0 px-4">
-            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Caribbean Cuisine</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="mm1">Caribbean Cuisine</span>
             <span class="text-gold-700">&#9670;</span>
-            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Craft Cocktails</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="mm2">Craft Cocktails</span>
             <span class="text-gold-700">&#9670;</span>
-            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Fresh Catch Daily</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="mm3">Fresh Catch Daily</span>
             <span class="text-gold-700">&#9670;</span>
-            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Island Desserts</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="mm4">Island Desserts</span>
             <span class="text-gold-700">&#9670;</span>
-            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Signature Crepes</span>
+            <span class="text-gold-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="mm5">Signature Crepes</span>
             <span class="text-gold-700">&#9670;</span>
-            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap">Rum Selection</span>
+            <span class="text-gray-500 font-serif text-sm tracking-[0.3em] uppercase whitespace-nowrap" data-i18n="mm6">Rum Selection</span>
             <span class="text-gold-700">&#9670;</span>
         </div>
         <!-- Duplicate for seamless loop -->
@@ -264,11 +277,11 @@
 <div class="tab-bar" id="tabBar">
     <div class="tab-scroll">
         <div class="flex items-center px-4 md:px-12 md:justify-center">
-            <button class="tab-btn active" data-tab="starters">Starters</button>
-            <button class="tab-btn" data-tab="mains">Mains</button>
-            <button class="tab-btn" data-tab="crepes">Crepes</button>
+            <button class="tab-btn active" data-tab="starters" data-i18n="tab-starters">Starters</button>
+            <button class="tab-btn" data-tab="mains" data-i18n="tab-mains">Mains</button>
+            <button class="tab-btn" data-tab="crepes" data-i18n="tab-crepes">Crepes</button>
             <button class="tab-btn" data-tab="drinks">Cocktails &amp; Drinks</button>
-            <button class="tab-btn" data-tab="desserts">Desserts</button>
+            <button class="tab-btn" data-tab="desserts" data-i18n="tab-desserts">Desserts</button>
         </div>
     </div>
 </div>
@@ -281,9 +294,9 @@
         <div class="menu-section active" id="section-starters">
             <div class="mb-14 reveal-up">
                 <div class="category-badge mb-4"><span>To Begin</span></div>
-                <h2 class="font-serif text-4xl md:text-5xl text-white tracking-wide mb-3">Starters</h2>
+                <h2 class="font-serif text-4xl md:text-5xl text-white tracking-wide mb-3" data-i18n="sec-starters">Starters</h2>
                 <div class="section-line max-w-xs mb-6"></div>
-                <p class="font-accent italic text-gray-500 text-lg">Start your island journey with bold, vibrant flavors.</p>
+                <p class="font-accent italic text-gray-500 text-lg" data-i18n="sec-starters-d">Start your island journey with bold, vibrant flavors.</p>
             </div>
             <div class="grid md:grid-cols-2 gap-x-16 menu-items-grid">
                 <!-- Item -->
@@ -353,7 +366,7 @@
         <div class="menu-section" id="section-mains">
             <div class="mb-14 reveal-up">
                 <div class="category-badge mb-4"><span>Main Course</span></div>
-                <h2 class="font-serif text-4xl md:text-5xl text-white tracking-wide mb-3">Mains</h2>
+                <h2 class="font-serif text-4xl md:text-5xl text-white tracking-wide mb-3" data-i18n="sec-mains">Mains</h2>
                 <div class="section-line max-w-xs mb-6"></div>
                 <p class="font-accent italic text-gray-500 text-lg">Hearty Caribbean plates, made fresh every day.</p>
             </div>
@@ -527,7 +540,7 @@
                 <div class="category-badge mb-4"><span>The Bar</span></div>
                 <h2 class="font-serif text-4xl md:text-5xl text-white tracking-wide mb-3">Cocktails &amp; Drinks</h2>
                 <div class="section-line max-w-xs mb-6"></div>
-                <p class="font-accent italic text-gray-500 text-lg">Sip the spirit of the Caribbean — one glass at a time.</p>
+                <p class="font-accent italic text-gray-500 text-lg" data-i18n="sec-drinks-d">Sip the spirit of the Caribbean — one glass at a time.</p>
             </div>
 
             <!-- Signature Cocktails -->
@@ -593,8 +606,8 @@
                     <img src="pictures &amp; videos/Clients Drinking Bwa Kalé Energy Drink.jpeg" alt="Clients enjoying drinks at Triple R" class="w-full h-full object-cover">
                     <div class="gallery-overlay"></div>
                     <div class="absolute bottom-0 left-0 p-6 z-10">
-                        <p class="font-serif text-white text-sm tracking-widest uppercase">The Bar Experience</p>
-                        <p class="font-accent italic text-gold-400 text-sm">Good vibes, great drinks</p>
+                        <p class="font-serif text-white text-sm tracking-widest uppercase" data-i18n="bar-exp">The Bar Experience</p>
+                        <p class="font-accent italic text-gold-400 text-sm" data-i18n="bar-exp-d">Good vibes, great drinks</p>
                     </div>
                 </div>
             </div>
@@ -646,9 +659,9 @@
         <div class="menu-section" id="section-desserts">
             <div class="mb-14 reveal-up">
                 <div class="category-badge mb-4"><span>Sweet Ending</span></div>
-                <h2 class="font-serif text-4xl md:text-5xl text-white tracking-wide mb-3">Desserts</h2>
+                <h2 class="font-serif text-4xl md:text-5xl text-white tracking-wide mb-3" data-i18n="sec-desserts">Desserts</h2>
                 <div class="section-line max-w-xs mb-6"></div>
-                <p class="font-accent italic text-gray-500 text-lg">End on a sweet note — island indulgence awaits.</p>
+                <p class="font-accent italic text-gray-500 text-lg" data-i18n="sec-desserts-d">End on a sweet note — island indulgence awaits.</p>
             </div>
             <div class="grid md:grid-cols-2 gap-x-16 menu-items-grid">
                 <div class="menu-item reveal-up">
@@ -690,8 +703,8 @@
                     <img src="pictures &amp; videos/client enjoying meal.jpeg" alt="Client enjoying dessert at Triple R" class="w-full h-full object-cover">
                     <div class="gallery-overlay"></div>
                     <div class="absolute bottom-0 left-0 p-6 z-10">
-                        <p class="font-serif text-white text-sm tracking-widest uppercase">Sweet Endings</p>
-                        <p class="font-accent italic text-gold-400 text-sm">The perfect finish to your meal</p>
+                        <p class="font-serif text-white text-sm tracking-widest uppercase" data-i18n="sweet-end">Sweet Endings</p>
+                        <p class="font-accent italic text-gold-400 text-sm" data-i18n="sweet-end-d">The perfect finish to your meal</p>
                     </div>
                 </div>
             </div>
@@ -704,48 +717,148 @@
 <section class="bg-night py-24 px-6 md:px-12" id="gallery">
     <div class="max-w-6xl mx-auto">
         <div class="text-center mb-16 reveal-up">
-            <p class="font-sans text-gold-500 tracking-[0.45em] uppercase text-[10px] mb-4">Visual Story</p>
-            <h2 class="font-serif text-4xl md:text-5xl text-white tracking-wide mb-4">From Our Kitchen</h2>
+            <p class="font-sans text-gold-500 tracking-[0.45em] uppercase text-[10px] mb-4" data-i18n="sec-kitchen">Visual Story</p>
+            <h2 class="font-serif text-4xl md:text-5xl text-white tracking-wide mb-4" data-i18n="sec-kitchen-t">From Our Kitchen</h2>
             <div class="section-line max-w-sm mx-auto mb-6"></div>
-            <p class="font-accent italic text-gray-500 text-lg max-w-md mx-auto">Every plate is a work of art — fresh, vibrant, made with love.</p>
+            <p class="font-accent italic text-gray-500 text-lg max-w-md mx-auto" data-i18n="sec-kitchen-d">Every plate is a work of art — fresh, vibrant, made with love.</p>
         </div>
 
         <!-- Gallery grid -->
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-            <div class="gallery-item col-span-2 md:col-span-1 h-64 md:h-80 reveal-scale">
-                <img src="pictures &amp; videos/Mix Tapas.png" alt="Mix Tapas" class="w-full h-full object-cover">
+        <div class="kitchen-grid">
+            <!-- Chef video feature tile (spans 2x2) -->
+            <div class="kitchen-tile kitchen-tile--feature">
+                <video src="pictures &amp; videos/video chef preparing Big Sandwich.mp4" autoplay muted loop playsinline class="kitchen-media"></video>
                 <div class="gallery-overlay"></div>
-                <div class="absolute bottom-0 left-0 p-4 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <p class="font-serif text-white text-xs tracking-widest uppercase">Mix Tapas</p>
+                <div class="kitchen-badge">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold-500 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-gold-500"></span>
+                    </span>
+                    <p class="font-sans text-white text-[10px] tracking-[0.25em] uppercase" data-i18n="chef-live">Live from the Kitchen</p>
+                </div>
+                <div class="kitchen-caption kitchen-caption--feature">
+                    <p class="font-serif text-white text-sm md:text-base tracking-widest uppercase" data-i18n="chef-sandwich">Chef Preparing the Big Sandwich</p>
+                    <p class="font-accent italic text-gold-400 text-xs md:text-sm" data-i18n="chef-sandwich-d">Crafted fresh, right before your eyes</p>
                 </div>
             </div>
-            <div class="gallery-item h-64 md:h-80 reveal-scale">
-                <img src="pictures &amp; videos/Stew turkey White rice Steamed vegetable Lentil peas.jpeg" alt="Stew Turkey plate" class="w-full h-full object-cover">
+            <div class="kitchen-tile">
+                <img src="pictures &amp; videos/Mix Tapas.png" alt="Mix Tapas" loading="lazy" class="kitchen-media">
                 <div class="gallery-overlay"></div>
+                <div class="kitchen-caption"><p class="font-serif text-white text-[10px] md:text-xs tracking-widest uppercase">Mix Tapas</p></div>
             </div>
-            <div class="gallery-item h-64 md:h-80 reveal-scale">
-                <img src="pictures &amp; videos/pasta.png" alt="Pasta Bolognese" class="w-full h-full object-cover">
+            <div class="kitchen-tile">
+                <img src="pictures &amp; videos/Stew turkey White rice Steamed vegetable Lentil peas.jpeg" alt="Stew Turkey plate" loading="lazy" class="kitchen-media">
                 <div class="gallery-overlay"></div>
+                <div class="kitchen-caption"><p class="font-serif text-white text-[10px] md:text-xs tracking-widest uppercase">Stew Turkey</p></div>
             </div>
-            <div class="gallery-item h-64 md:h-80 reveal-scale">
-                <img src="pictures &amp; videos/stew beef fried rice, baked macaroni.png" alt="Stew beef with fried rice" class="w-full h-full object-cover">
+            <div class="kitchen-tile">
+                <img src="pictures &amp; videos/pasta.png" alt="Pasta Bolognese" loading="lazy" class="kitchen-media">
                 <div class="gallery-overlay"></div>
+                <div class="kitchen-caption"><p class="font-serif text-white text-[10px] md:text-xs tracking-widest uppercase">Pasta</p></div>
             </div>
-            <div class="gallery-item col-span-2 md:col-span-1 h-64 md:h-80 reveal-scale">
-                <img src="pictures &amp; videos/DISH.jpeg" alt="Signature dish" class="w-full h-full object-cover">
+            <div class="kitchen-tile">
+                <img src="pictures &amp; videos/stew beef fried rice, baked macaroni.png" alt="Stew beef with fried rice" loading="lazy" class="kitchen-media">
                 <div class="gallery-overlay"></div>
+                <div class="kitchen-caption"><p class="font-serif text-white text-[10px] md:text-xs tracking-widest uppercase">Stew Beef</p></div>
             </div>
-            <div class="gallery-item h-64 md:h-80 reveal-scale">
-                <img src="pictures &amp; videos/Plat ( Chicken wings &amp;  fries.jpeg" alt="Chicken Wings &amp; Fries" class="w-full h-full object-cover">
+            <div class="kitchen-tile">
+                <img src="pictures &amp; videos/Plat ( Chicken wings &amp;  fries.jpeg" alt="Chicken Wings &amp; Fries" loading="lazy" class="kitchen-media">
                 <div class="gallery-overlay"></div>
+                <div class="kitchen-caption"><p class="font-serif text-white text-[10px] md:text-xs tracking-widest uppercase">Chicken Wings</p></div>
             </div>
-            <div class="gallery-item col-span-2 md:col-span-1 h-64 md:h-80 reveal-scale">
-                <img src="pictures &amp; videos/Oxtail, white rice, salt fish pie, mix salade.png" alt="Oxtail Special" class="w-full h-full object-cover">
+            <div class="kitchen-tile">
+                <img src="pictures &amp; videos/Oxtail.jpeg" alt="Oxtail Special" loading="lazy" class="kitchen-media">
                 <div class="gallery-overlay"></div>
+                <div class="kitchen-caption"><p class="font-serif text-white text-[10px] md:text-xs tracking-widest uppercase">Oxtail</p></div>
+            </div>
+            <div class="kitchen-tile">
+                <img src="pictures &amp; videos/red snapper.jpg" alt="Red Snapper" loading="lazy" class="kitchen-media">
+                <div class="gallery-overlay"></div>
+                <div class="kitchen-caption"><p class="font-serif text-white text-[10px] md:text-xs tracking-widest uppercase">Red Snapper</p></div>
+            </div>
+            <div class="kitchen-tile">
+                <img src="pictures &amp; videos/hamburger with chicken wings.jpeg" alt="Hamburger with Chicken Wings" loading="lazy" class="kitchen-media">
+                <div class="gallery-overlay"></div>
+                <div class="kitchen-caption"><p class="font-serif text-white text-[10px] md:text-xs tracking-widest uppercase">Hamburger &amp; Wings</p></div>
             </div>
         </div>
     </div>
 </section>
+
+<style>
+    /* Kitchen gallery — aligned grid for mobile (2 cols) + desktop (3 cols) */
+    .kitchen-grid{
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
+        grid-auto-rows:1fr;
+        gap:.5rem;
+    }
+    .kitchen-grid::before{content:'';grid-column:1 / -1;padding-top:0;display:none}
+    .kitchen-tile{
+        position:relative;
+        overflow:hidden;
+        aspect-ratio:1/1;
+        border-radius:2px;
+        background:#0a0a0a;
+        opacity:0;
+        transform:translateY(28px) scale(.96);
+        transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1);
+        transition-delay:calc(var(--tile-delay,0) * 80ms);
+    }
+    .kitchen-tile.in-view{opacity:1;transform:translateY(0) scale(1)}
+    .kitchen-tile .kitchen-media{
+        width:100%;height:100%;object-fit:cover;display:block;
+        transition:transform 1s cubic-bezier(.22,1,.36,1),filter .7s ease;
+    }
+    .kitchen-tile:hover .kitchen-media{transform:scale(1.08);filter:brightness(1.08)}
+    .kitchen-tile::after{
+        content:'';position:absolute;inset:0;
+        background:linear-gradient(to top,rgba(10,10,10,.85) 0%,rgba(10,10,10,.25) 40%,transparent 70%);
+        pointer-events:none;
+        transition:opacity .5s ease;
+    }
+    .kitchen-tile:hover::after{opacity:.7}
+    .kitchen-caption{position:absolute;left:0;right:0;bottom:0;padding:.75rem;z-index:2}
+    .kitchen-caption--feature{padding:1rem}
+    .kitchen-badge{
+        position:absolute;top:.75rem;left:.75rem;z-index:2;
+        display:flex;align-items:center;gap:.5rem;
+        background:rgba(0,0,0,.55);backdrop-filter:blur(6px);
+        padding:.375rem .75rem;border-radius:9999px;
+    }
+    /* Feature tile spans 2x2 on both breakpoints → keeps grid aligned */
+    .kitchen-tile--feature{grid-column:span 2;grid-row:span 2}
+
+    @media(min-width:768px){
+        .kitchen-grid{grid-template-columns:repeat(3,1fr);gap:1rem}
+        .kitchen-caption--feature{padding:1.5rem}
+    }
+    @media(max-width:767px){
+        #gallery{padding-top:4rem;padding-bottom:4rem;padding-left:1rem;padding-right:1rem}
+    }
+    @media(prefers-reduced-motion:reduce){
+        .kitchen-tile{transition:opacity .3s ease;transform:none}
+        .kitchen-tile:hover .kitchen-media{transform:none}
+    }
+</style>
+<script>
+(function(){
+    const tiles=document.querySelectorAll('.kitchen-grid .kitchen-tile');
+    if(!tiles.length)return;
+    // Assign staggered reveal delays based on DOM order
+    tiles.forEach((t,i)=>t.style.setProperty('--tile-delay',Math.min(i,8)));
+    if(!('IntersectionObserver' in window)){tiles.forEach(t=>t.classList.add('in-view'));return;}
+    const io=new IntersectionObserver((entries)=>{
+        entries.forEach((entry)=>{
+            if(entry.isIntersecting){
+                entry.target.classList.add('in-view');
+                io.unobserve(entry.target);
+            }
+        });
+    },{threshold:.12,rootMargin:'0px 0px -60px 0px'});
+    tiles.forEach(t=>io.observe(t));
+})();
+</script>
 
 <!-- ==================== CTA SECTION ==================== -->
 <section class="bg-deep py-28 px-6 text-center relative overflow-hidden" id="cta">
@@ -758,18 +871,58 @@
 
     <div class="max-w-2xl mx-auto relative z-10">
         <p class="font-sans text-gold-500 tracking-[0.5em] uppercase text-[10px] mb-6 reveal-up">Sandy Ground, Saint Martin</p>
-        <h2 class="font-serif text-5xl md:text-6xl text-white tracking-wide mb-4 reveal-up gold-glow">Ready to Taste?</h2>
+        <h2 class="font-serif text-5xl md:text-6xl text-white tracking-wide mb-4 reveal-up gold-glow" data-i18n="menu-cta-t">Ready to Taste?</h2>
         <div class="flex items-center justify-center gap-5 mb-6 reveal-up">
             <div class="w-12 h-[1px] bg-gold-500/40"></div>
-            <p class="font-accent italic text-gold-400 text-xl">Join us at Triple R</p>
+            <p class="font-accent italic text-gold-400 text-xl" data-i18n="menu-cta-s">Join us at Triple R</p>
             <div class="w-12 h-[1px] bg-gold-500/40"></div>
         </div>
         <p class="font-sans text-gray-500 text-sm tracking-[0.08em] leading-relaxed mb-12 reveal-up">
             Reserve your table and let us take you on a journey through the finest Caribbean flavors. Walk-ins welcome — reservations recommended on weekends.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center reveal-up">
-            <a href="reservations.html" class="magnetic-btn bg-gold-500 text-deep px-12 py-5 text-[10px] tracking-[0.35em] uppercase font-bold"><span>Reserve a Table</span></a>
+            <a href="reservations.html" class="magnetic-btn bg-gold-500 text-deep px-12 py-5 text-[10px] tracking-[0.35em] uppercase font-bold"><span data-i18n="menu-cta-cta">Reserve a Table</span></a>
             <a href="about.html" class="magnetic-btn border border-gold-500/50 text-gray-400 px-12 py-5 text-[10px] tracking-[0.35em] uppercase font-semibold"><span>Our Story</span></a>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== BWA KALÉ ENERGY DRINK ==================== -->
+<section class="bg-night py-20 px-6 md:px-12 relative overflow-hidden" id="bwa-kale">
+    <div class="max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <!-- Commercial Video -->
+            <div class="reveal-up relative">
+                <div class="absolute -inset-4 bg-gradient-to-tr from-gold-500/20 via-transparent to-tropical/10 blur-2xl opacity-70 pointer-events-none"></div>
+                <div class="relative overflow-hidden rounded-sm border border-gold-500/20 shadow-2xl" style="aspect-ratio:4/5;background:#0a0a0a">
+                    <video src="pictures &amp; videos/bwakalé energy drink commercial.mp4" autoplay muted loop playsinline poster="pictures &amp; videos/Clients Drinking Bwa Kalé Energy Drink.jpeg" class="w-full h-full object-cover"></video>
+                    <div class="absolute inset-0 bg-gradient-to-t from-deep/60 via-transparent to-transparent pointer-events-none"></div>
+                    <div class="absolute top-4 left-4 bg-gold-500/90 text-deep px-3 py-1.5 rounded-full">
+                        <p class="font-sans text-[9px] tracking-[0.25em] uppercase font-bold" data-i18n="bwa-official">Official Distributor</p>
+                    </div>
+                    <div class="absolute top-4 right-4 flex items-center gap-2 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold-500 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-gold-500"></span>
+                        </span>
+                        <p class="font-sans text-white text-[9px] tracking-[0.25em] uppercase">Commercial</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Text -->
+            <div class="reveal-up">
+                <p class="font-sans text-gold-500 tracking-[0.4em] uppercase text-[10px] mb-4" data-i18n="bwa-label">Exclusive Partner</p>
+                <h2 class="font-serif text-4xl md:text-5xl text-white tracking-wide mb-6 leading-tight">
+                    <a href="https://linktr.ee/bwakaleenergydrink?utm_source=qr_code" target="_blank" rel="noopener noreferrer" class="text-gold-400 italic font-accent hover:text-gold-300 transition-colors underline decoration-gold-500/40 underline-offset-[6px] decoration-[1.5px]">Bwa Kalé Energy Drink</a>
+                </h2>
+                <div class="section-line max-w-xs mb-6"></div>
+                <p class="font-sans text-gray-400 text-base leading-relaxed mb-6" data-i18n="bwa-p1">Triple R Bar Restaurant is the <span class="text-gold-400 font-semibold">official distributor</span> of Bwa Kalé Energy Drink in Saint Martin. Discover the Caribbean's boldest energy boost — crafted with island spirit.</p>
+                <p class="font-accent italic text-gray-500 text-sm mb-8" data-i18n="bwa-p2">Taste the energy that fuels the island vibe.</p>
+                <a href="https://linktr.ee/bwakaleenergydrink?utm_source=qr_code" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 bg-gold-500 text-deep px-8 py-4 text-[10px] tracking-[0.35em] uppercase font-bold hover:bg-gold-400 transition-all">
+                    <span data-i18n="bwa-cta">Discover Bwa Kalé</span>
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </a>
+            </div>
         </div>
     </div>
 </section>
@@ -781,13 +934,23 @@
             <!-- Brand -->
             <div>
                 <a href="index.html" class="font-serif text-gold-500 text-2xl tracking-[0.2em] font-bold uppercase block mb-4">Triple R</a>
-                <p class="font-accent italic text-gray-500 text-base leading-relaxed mb-6">Bar &amp; Restaurant<br>Sandy Ground, Saint Martin</p>
+                <p class="font-accent italic text-gray-500 text-base leading-relaxed mb-6" data-i18n="foot-address-inline">Bar &amp; Restaurant · 31 rue de Sandy Ground<br>97150 Saint Martin</p>
                 <div class="flex gap-4">
                     <a href="#" aria-label="Instagram" class="w-9 h-9 border border-gold-500/20 flex items-center justify-center text-gray-500 hover:text-gold-500 hover:border-gold-500/60 transition-all">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
                     </a>
                     <a href="#" aria-label="Facebook" class="w-9 h-9 border border-gold-500/20 flex items-center justify-center text-gray-500 hover:text-gold-500 hover:border-gold-500/60 transition-all">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                    </a>
+                    <a href="https://earth.google.com/web/search/31+rue+de+Sandy+Ground,+97150+Saint+Martin" target="_blank" rel="noopener noreferrer" aria-label="Google Earth" class="w-9 h-9 border border-gold-500/20 flex items-center justify-center text-gray-500 hover:text-gold-500 hover:border-gold-500/60 transition-all">
+                        <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1a2 2 0 002 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3a1 1 0 00-1-1H8v-2h2a1 1 0 001-1V7h2a2 2 0 002-2v-.41A7.984 7.984 0 0120 12a7.96 7.96 0 01-2.1 5.39z"/></svg>
+                    </a>
+                </div>
+                <div class="mt-6">
+                    <p class="font-serif text-gold-500 text-[10px] tracking-[0.35em] uppercase mb-3" data-i18n="foot-map">Find Us</p>
+                    <a href="https://maps.app.goo.gl/s2wLVGQDi7BpRMzL6" target="_blank" rel="noopener noreferrer" class="block relative overflow-hidden rounded-sm border border-gold-500/20 hover:border-gold-500/60 transition-all group" style="aspect-ratio:16/9;max-width:340px" aria-label="Open in Google Maps">
+                        <iframe src="https://maps.app.goo.gl/s2wLVGQDi7BpRMzL6" class="w-full h-full pointer-events-none" style="border:0;filter:grayscale(.3) contrast(.95)" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Triple R Bar Restaurant location"></iframe>
+                        <div class="absolute inset-0 bg-deep/0 group-hover:bg-deep/20 transition-all"></div>
                     </a>
                 </div>
             </div>
@@ -809,8 +972,10 @@
             <div>
                 <p class="font-sans text-[10px] tracking-[0.4em] uppercase text-gold-600 mb-6">Visit Us</p>
                 <address class="not-italic space-y-3">
-                    <p class="font-sans text-sm text-gray-500 leading-relaxed">Sandy Ground<br>Saint Martin 97150</p>
-                    <p class="font-sans text-sm text-gray-500">Tue — Sun<br><span class="text-gray-400">8:00 AM — 2:00 AM</span></p>
+                    <p class="font-sans text-sm text-gray-500 leading-relaxed" data-i18n="foot-address" data-content="address">31 rue de Sandy Ground<br>97150 Saint Martin</p>
+                    <p class="font-sans text-sm text-gray-500" data-content="hours">Tue — Sun<br><span class="text-gray-400">8:00 AM — 2:00 AM</span></p>
+                    <p class="font-sans text-sm"><a href="tel:+590690691098" data-content="phone" class="text-gold-500 hover:text-gold-400 transition-colors">+590 690 69 10 98</a></p>
+                    <p class="font-sans text-sm"><a href="mailto:triplerbarrestaurant1@gmail.com" class="text-gold-500 hover:text-gold-400 transition-colors break-all">triplerbarrestaurant1@gmail.com</a></p>
                 </address>
             </div>
         </div>
@@ -820,6 +985,7 @@
         <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
             <p class="font-sans text-xs text-gray-600 tracking-wide">&copy; 2025 Triple R Bar Restaurant. All rights reserved.</p>
             <p class="font-accent italic text-gray-700 text-sm">Sandy Ground, Saint Martin</p>
+            <p class="font-sans text-sm text-gray-600 tracking-wide"><span data-i18n="foot-soul">Designed By <a href="https://www.instagram.com/korekdigitalmarketing/" target="_blank" rel="noopener noreferrer" class="text-gold-500 hover:text-gold-400 transition-colors">Korek Digital Marketing</a></span></p>
         </div>
     </div>
 </footer>
@@ -998,5 +1164,8 @@
     }
 })();
 </script>
+<script src="i18n.js"></script>
+<script src="content-loader.js"></script>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </body>
 </html>

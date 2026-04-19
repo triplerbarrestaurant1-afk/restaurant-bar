@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Reservations | Triple R Bar Restaurant | Sandy Ground, Saint Martin</title>
     <meta name="description" content="Reserve your table at Triple R Bar Restaurant in Sandy Ground, Saint Martin. Authentic Caribbean dining with craft cocktails and DJ vibes.">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -141,7 +142,18 @@
             .magnetic-btn:hover::before{transform:translateY(101%)}
             .cursor-follower{display:none!important}
         }
-    </style>
+        .lang-toggle,.lang-toggle-mobile{cursor:pointer;background:transparent}
+    
+        /* Logo explosive animation */
+        .logo-link{display:inline-block;position:relative}
+        .logo-img{filter:drop-shadow(0 0 0 transparent);transition:filter 0.3s ease}
+        .logo-link:hover .logo-img{filter:drop-shadow(0 0 8px rgba(212,175,55,0.6)) drop-shadow(0 0 20px rgba(212,175,55,0.3))}
+        @keyframes logoExplodeIn{0%{opacity:0;transform:scale(0.3) rotate(-10deg);filter:brightness(3) drop-shadow(0 0 40px rgba(212,175,55,1))}30%{opacity:1;transform:scale(1.2) rotate(3deg);filter:brightness(2) drop-shadow(0 0 30px rgba(212,175,55,0.8))}50%{transform:scale(0.95) rotate(-1deg);filter:brightness(1.5) drop-shadow(0 0 20px rgba(212,175,55,0.5))}70%{transform:scale(1.05) rotate(0.5deg)}100%{transform:scale(1) rotate(0deg);filter:brightness(1) drop-shadow(0 0 0 transparent)}}
+        .logo-explode{animation:logoExplodeIn 1.2s cubic-bezier(0.34,1.56,0.64,1) forwards}
+        @keyframes sparkle{0%,100%{opacity:0;transform:scale(0) translate(0,0)}50%{opacity:1;transform:scale(1)}}
+        .logo-particle{position:absolute;width:4px;height:4px;background:#D4AF37;border-radius:50;pointer-events:none;opacity:0}
+
+        </style>
 </head>
 <body>
 
@@ -159,16 +171,18 @@
 
 <!-- NAV -->
 <nav class="fixed w-full z-[100] glass-nav py-5 px-6 md:px-12 flex justify-between items-center" id="mainNav">
-    <a href="index.html" class="font-serif text-gold-500 text-xl tracking-[0.15em] font-bold uppercase">Triple R</a>
+    <a href="index.html" class="logo-link relative" id="navLogo"><img src="pictures &amp; videos/Triple R Bar Restaurant Logo.png" alt="Triple R Bar Restaurant" class="h-12 md:h-14 w-auto logo-img"></a>
     <ul class="hidden lg:flex items-center gap-10 text-[11px] tracking-[0.25em] uppercase font-medium text-gray-400">
-        <li><a href="index.html" class="hover:text-gold-500 transition-colors">Home</a></li>
+        <li><a href="index.html" class="hover:text-gold-500 transition-colors" data-i18n="nav-home">Home</a></li>
         <li><a href="about.html" class="hover:text-gold-500 transition-colors">About</a></li>
         <li><a href="menu.html" class="hover:text-gold-500 transition-colors">Menu</a></li>
         <li><a href="reservations.html" class="text-gold-500">Reservations</a></li>
         <li><a href="ambiance.html" class="hover:text-gold-500 transition-colors">Ambiance</a></li>
         <li><a href="blog.html" class="hover:text-gold-500 transition-colors">Blog</a></li>
     </ul>
-    <a href="reservations.html" class="hidden lg:block magnetic-btn bg-gold-500 text-deep px-7 py-3 text-[10px] tracking-[0.3em] uppercase font-bold"><span>Reserve</span></a>
+    <div class="hidden lg:flex items-center gap-4"><button type="button" class="lang-toggle text-[10px] tracking-[0.2em] uppercase font-semibold border border-gold-500/30 px-3 py-1.5 rounded-sm transition-all hover:border-gold-500" id="langToggle" aria-label="Switch language"><span class="text-gold-500">EN</span><span class="text-gray-500 mx-1">/</span><span class="text-gray-500">FR</span></button>
+    <a href="reservations.html" class="magnetic-btn bg-gold-500 text-deep px-7 py-3 text-[10px] tracking-[0.3em] uppercase font-bold"><span data-i18n="nav-reserve">Reserve</span></a></div>
+    <button type="button" class="lang-toggle-mobile lg:hidden inline-flex items-center gap-1.5 text-[10px] tracking-[0.2em] uppercase font-semibold border border-gold-500/40 px-2.5 py-1.5 rounded-sm mr-3" id="langToggleHeader" aria-label="Switch language"><svg class="w-3.5 h-3.5 text-gold-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" d="M3 12h18M12 3a13.5 13.5 0 010 18M12 3a13.5 13.5 0 000 18"/></svg><span class="text-gold-500">EN</span><span class="text-gray-500">/</span><span class="text-gray-500">FR</span></button>
     <button class="lg:hidden text-gold-500 z-[999] relative" id="menuToggle" aria-label="Menu">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6" id="line1" style="transition:all 0.4s"/><line x1="3" y1="12" x2="21" y2="12" id="line2" style="transition:all 0.4s"/><line x1="3" y1="18" x2="21" y2="18" id="line3" style="transition:all 0.4s"/></svg>
     </button>
@@ -176,7 +190,7 @@
 
 <!-- Mobile Menu -->
 <div class="mobile-menu" id="mobileMenu">
-    <a href="index.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest">Home</a>
+    <a href="index.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest" data-i18n="nav-home">Home</a>
     <a href="about.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest">About</a>
     <a href="menu.html" class="font-serif text-3xl text-white hover:text-gold-500 transition-colors tracking-widest">Menu</a>
     <a href="reservations.html" class="font-serif text-3xl text-gold-500 tracking-widest">Reservations</a>
@@ -243,59 +257,82 @@
             <!-- LEFT: Form -->
             <div class="reveal-left relative" id="formContainer">
                 <!-- Success overlay -->
-                <div class="success-overlay rounded" id="successOverlay">
-                    <svg width="80" height="80" viewBox="0 0 100 100" fill="none">
+                <div class="success-overlay rounded" id="successOverlay" style="overflow-y:auto;padding:2rem 1.5rem">
+                    <svg width="70" height="70" viewBox="0 0 100 100" fill="none">
                         <circle cx="50" cy="50" r="45" stroke="#D4AF37" stroke-width="1.5" class="check-circle" id="checkCircle"/>
                         <polyline points="28,52 44,68 72,36" stroke="#D4AF37" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" class="check-mark" id="checkMark"/>
                     </svg>
-                    <p class="font-serif text-2xl md:text-3xl text-gold-500 text-center">Payment Confirmed!</p>
-                    <p class="font-sans text-gray-400 text-sm tracking-wider text-center max-w-xs leading-relaxed">Your &euro;20 deposit has been received and your table is secured. You'll receive a confirmation email with all the details.</p>
-                    <p class="font-sans text-gray-500 text-xs text-center mt-2">The &euro;20 will be deducted from your final bill.</p>
+                    <p class="font-serif text-2xl md:text-3xl text-gold-500 text-center">Reservation Received!</p>
+                    <div class="text-center">
+                        <p class="font-sans text-[10px] tracking-[0.3em] uppercase text-gray-500 mb-2">Your Reservation Number</p>
+                        <p class="font-serif text-xl md:text-2xl text-white tracking-wider" id="resNumberDisplay">—</p>
+                    </div>
+                    <div class="border border-gold-500/40 bg-gold-500/5 px-6 py-5 max-w-md mx-auto text-center rounded">
+                        <p class="font-sans text-gold-500 text-[11px] tracking-[0.3em] uppercase mb-3">Final Step — 20€ Deposit</p>
+                        <p class="font-sans text-gray-300 text-sm leading-relaxed mb-4">To confirm your reservation, please send a <strong class="text-gold-400">20€ deposit</strong> via Revolut. Mention your reservation number in the payment note.</p>
+                        <a href="https://revolut.me/rosali0avt" rel="noopener noreferrer" class="inline-block bg-gold-500 text-deep px-8 py-3 text-[11px] tracking-[0.3em] uppercase font-bold font-sans hover:bg-gold-400 transition-colors">Pay 20€ on Revolut</a>
+                        <div class="mt-4 p-3 border border-gold-500/20 rounded bg-deep/40">
+                            <p class="font-sans text-[9px] tracking-[0.25em] uppercase text-gray-500 mb-2">Revolut Payment Link</p>
+                            <p class="font-mono text-gold-400 text-xs break-all select-all" id="revolutLinkText">https://revolut.me/rosali0avt</p>
+                            <button type="button" onclick="copyRevolutLink(this)" class="mt-3 border border-gold-500/40 text-gold-500 text-[10px] tracking-[0.25em] uppercase px-4 py-2 hover:bg-gold-500 hover:text-deep transition-colors font-sans">Copy Link</button>
+                        </div>
+                        <p class="font-sans text-gray-400 text-xs mt-4 leading-relaxed">If the button doesn't open, copy the link above and paste it in your Revolut app or browser.</p>
+                        <p class="font-sans text-gray-500 text-xs mt-3 leading-relaxed">Your table is confirmed once we receive the deposit.</p>
+                    </div>
                     <p class="font-accent italic text-gold-400/70 text-lg text-center">See you at Triple R.</p>
-                    <button onclick="resetForm()" class="mt-4 border border-gold-500/40 text-gold-500/70 px-8 py-3 text-[10px] tracking-[0.3em] uppercase hover:border-gold-500 hover:text-gold-500 transition-all font-sans">Make Another Reservation</button>
+                    <button onclick="resetForm()" class="border border-gold-500/40 text-gold-500/70 px-8 py-3 text-[10px] tracking-[0.3em] uppercase hover:border-gold-500 hover:text-gold-500 transition-all font-sans">Make Another Reservation</button>
                 </div>
 
-                <form id="reservationForm" class="space-y-10" novalidate>
+                <form id="reservationForm" name="reservation" method="POST" action="https://formsubmit.co/ajax/triplerbarrestaurant1@gmail.com" class="space-y-10" novalidate>
+                    <input type="hidden" name="_subject" value="New Reservation — Triple R Bar Restaurant">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_replyto" id="replyToField" value="">
+                    <input type="hidden" name="_autoresponse" id="autoResponseField" value="">
+                    <input type="hidden" id="reservationNumber" name="reservationNumber" value="">
+                    <input type="hidden" name="depositAmount" value="20 EUR">
+                    <input type="hidden" name="paymentStatus" value="PENDING - awaiting Revolut deposit">
+                    <p class="hidden" aria-hidden="true"><label>Don't fill this out: <input name="_honey" tabindex="-1" autocomplete="off"></label></p>
                     <!-- Row 1: Name + Email -->
                     <div class="grid sm:grid-cols-2 gap-8">
                         <div class="form-group">
-                            <label class="form-label" for="fullName">Full Name</label>
-                            <input type="text" id="fullName" name="fullName" class="form-field" placeholder="Your full name" required autocomplete="name">
+                            <label class="form-label" for="fullName" data-i18n="form-name">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" class="form-field" placeholder="Your full name" data-i18n="form-name" required autocomplete="name">
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="email">Email Address</label>
-                            <input type="email" id="email" name="email" class="form-field" placeholder="your@email.com" required autocomplete="email">
+                            <label class="form-label" for="email" data-i18n="form-email">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-field" placeholder="your@email.com" data-i18n="form-email" required autocomplete="email">
                         </div>
                     </div>
 
                     <!-- Row 2: Phone -->
                     <div class="form-group">
-                        <label class="form-label" for="phone">Phone Number</label>
+                        <label class="form-label" for="phone" data-i18n="form-phone">Phone Number</label>
                         <input type="tel" id="phone" name="phone" class="form-field" placeholder="+590 690 691 098" autocomplete="tel">
                     </div>
 
                     <!-- Row 3: Date + Time -->
                     <div class="grid sm:grid-cols-2 gap-8">
                         <div class="form-group">
-                            <label class="form-label" for="date">Date</label>
+                            <label class="form-label" for="date" data-i18n="form-date">Date</label>
                             <input type="date" id="date" name="date" class="form-field" required>
                         </div>
                         <div class="form-group select-wrapper">
-                            <label class="form-label" for="time">Time</label>
+                            <label class="form-label" for="time" data-i18n="form-time">Preferred Time</label>
                             <select id="time" name="time" class="form-field" required>
                                 <option value="" disabled selected style="color:rgba(156,163,175,0.5)">Select a time</option>
-                                <optgroup label="Morning">
+                                <optgroup label="Morning" data-i18n="form-morning">
                                     <option value="08:00">8:00 AM</option>
                                     <option value="09:00">9:00 AM</option>
                                     <option value="10:00">10:00 AM</option>
                                 </optgroup>
-                                <optgroup label="Lunch">
+                                <optgroup label="Lunch" data-i18n="form-lunch">
                                     <option value="11:00">11:00 AM</option>
                                     <option value="12:00">12:00 PM</option>
                                     <option value="13:00">1:00 PM</option>
                                     <option value="14:00">2:00 PM</option>
                                 </optgroup>
-                                <optgroup label="Dinner">
+                                <optgroup label="Dinner" data-i18n="form-dinner">
                                     <option value="18:00">6:00 PM</option>
                                     <option value="19:00">7:00 PM</option>
                                     <option value="20:00">8:00 PM</option>
@@ -309,7 +346,7 @@
 
                     <!-- Row 4: Guests -->
                     <div class="form-group select-wrapper">
-                        <label class="form-label" for="guests">Number of Guests</label>
+                        <label class="form-label" for="guests" data-i18n="form-guests">Number of Guests</label>
                         <select id="guests" name="guests" class="form-field" required>
                             <option value="" disabled selected style="color:rgba(156,163,175,0.5)">How many guests?</option>
                             <option value="1">1 Guest</option>
@@ -327,40 +364,24 @@
 
                     <!-- Row 5: Special requests -->
                     <div class="form-group">
-                        <label class="form-label" for="requests">Special Requests</label>
+                        <label class="form-label" for="requests" data-i18n="form-requests">Special Requests</label>
                         <textarea id="requests" name="requests" class="form-field resize-none" rows="3" placeholder="Dietary requirements, occasion, seating preference..."></textarea>
                     </div>
 
                     <!-- Error message -->
                     <p id="formError" class="text-red-400 text-xs tracking-wider hidden">Please fill in all required fields.</p>
 
-                    <!-- Payment Notice -->
-                    <div class="border border-gold-500/20 bg-gold-500/5 rounded-sm p-5 space-y-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 border border-gold-500/30 flex items-center justify-center shrink-0">
-                                <svg class="w-5 h-5 text-gold-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
-                            </div>
-                            <div>
-                                <p class="text-white text-sm font-semibold tracking-wide">Reservation Deposit: <span class="text-gold-500">&euro;20</span></p>
-                                <p class="text-gray-500 text-[10px] tracking-wider uppercase">Required to confirm your table</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-400 text-xs leading-relaxed font-light">A non-refundable deposit of <strong class="text-gold-500">&euro;20</strong> is required to secure your reservation. This amount will be deducted from your final bill on the day of your visit.</p>
-                        <div class="flex items-center gap-2 mt-2">
-                            <input type="checkbox" id="acceptPayment" class="w-4 h-4 accent-[#D4AF37] cursor-pointer" required>
-                            <label for="acceptPayment" class="text-gray-400 text-xs cursor-pointer">I agree to pay the &euro;20 deposit to confirm my reservation</label>
-                        </div>
+                    <!-- Deposit notice -->
+                    <div class="border border-gold-500/30 bg-gold-500/5 px-5 py-4 rounded">
+                        <p class="font-sans text-gold-500 text-[10px] tracking-[0.3em] uppercase mb-1">20€ Deposit Required</p>
+                        <p class="font-sans text-gray-400 text-xs leading-relaxed">A 20€ deposit via Revolut confirms your booking. Payment instructions appear after submission.</p>
                     </div>
 
                     <!-- Submit -->
                     <div>
                         <button type="submit" class="magnetic-btn bg-gold-500 text-deep w-full py-5 text-[11px] tracking-[0.4em] uppercase font-bold font-sans group" id="submitBtn">
-                            <span id="submitText">Pay &euro;20 & Confirm Reservation</span>
+                            <span id="submitText" data-i18n="form-submit">Reserve My Table</span>
                         </button>
-                        <div class="flex items-center justify-center gap-3 mt-4">
-                            <svg class="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
-                            <p class="text-gray-600 text-[10px] tracking-widest uppercase">Secure payment &bull; Deducted from your bill</p>
-                        </div>
                     </div>
                 </form>
             </div>
@@ -444,7 +465,7 @@
                         </div>
                         <div>
                             <p class="font-sans text-[10px] tracking-[0.3em] uppercase text-gold-600 mb-1">Call Us</p>
-                            <a href="tel:+590690691098" class="font-accent text-lg text-gray-200 hover:text-gold-400 transition-colors">+590 690 691 098</a>
+                            <a href="tel:+590690691098" data-content="phone" class="font-accent text-lg text-gray-200 hover:text-gold-400 transition-colors">+590 690 691 098</a>
                             <p class="font-sans text-gray-500 text-xs tracking-wide mt-1">Or use the form — we'll call you back</p>
                         </div>
                     </div>
@@ -456,7 +477,7 @@
                         <div class="w-3 h-3 bg-gold-500 rounded-full mx-auto mb-3 animate-pulse"></div>
                         <p class="font-sans text-[10px] tracking-[0.3em] uppercase text-gold-600">Sandy Ground</p>
                         <p class="font-sans text-gray-600 text-xs mt-1 tracking-wider">Saint Martin 97150</p>
-                        <a href="https://maps.google.com/?q=Sandy+Ground+Saint+Martin" target="_blank" rel="noopener" class="inline-block mt-4 text-[9px] tracking-[0.3em] uppercase text-gold-500/50 hover:text-gold-500 transition-colors border-b border-gold-500/20 hover:border-gold-500/50 pb-0.5">Open in Maps</a>
+                        <a href="https://maps.app.goo.gl/s2wLVGQDi7BpRMzL6" target="_blank" rel="noopener" class="inline-block mt-4 text-[9px] tracking-[0.3em] uppercase text-gold-500/50 hover:text-gold-500 transition-colors border-b border-gold-500/20 hover:border-gold-500/50 pb-0.5">Open in Maps</a>
                     </div>
                 </div>
 
@@ -551,36 +572,47 @@
             <!-- Brand -->
             <div>
                 <a href="index.html" class="font-serif text-gold-500 text-2xl tracking-[0.2em] font-bold uppercase block mb-4">Triple R</a>
-                <p class="font-accent italic text-gray-500 text-sm leading-relaxed mb-6">Bar Restaurant · Sandy Ground<br>Saint Martin 97150</p>
+                <p class="font-accent italic text-gray-500 text-sm leading-relaxed mb-6" data-i18n="foot-address-inline">Bar Restaurant · 31 rue de Sandy Ground<br>97150 Saint Martin</p>
                 <p class="font-sans text-gray-600 text-xs tracking-wider leading-relaxed">Island flavors, craft cocktails,<br>and good vibes — always.</p>
             </div>
             <!-- Links -->
             <div>
-                <p class="font-sans text-[10px] tracking-[0.35em] uppercase text-gold-600 mb-6">Navigation</p>
+                <p class="font-sans text-[10px] tracking-[0.35em] uppercase text-gold-600 mb-6" data-i18n="foot-nav">Navigation</p>
                 <ul class="space-y-3">
-                    <li><a href="index.html" class="font-sans text-gray-500 text-sm hover:text-gold-500 transition-colors tracking-wider">Home</a></li>
-                    <li><a href="about.html" class="font-sans text-gray-500 text-sm hover:text-gold-500 transition-colors tracking-wider">About</a></li>
-                    <li><a href="menu.html" class="font-sans text-gray-500 text-sm hover:text-gold-500 transition-colors tracking-wider">Menu</a></li>
-                    <li><a href="reservations.html" class="font-sans text-gold-500 text-sm tracking-wider">Reservations</a></li>
-                    <li><a href="ambiance.html" class="font-sans text-gray-500 text-sm hover:text-gold-500 transition-colors tracking-wider">Ambiance</a></li>
-                    <li><a href="blog.html" class="font-sans text-gray-500 text-sm hover:text-gold-500 transition-colors tracking-wider">Blog</a></li>
+                    <li><a href="index.html" class="font-sans text-gray-500 text-sm hover:text-gold-500 transition-colors tracking-wider" data-i18n="nav-home">Home</a></li>
+                    <li><a href="about.html" class="font-sans text-gray-500 text-sm hover:text-gold-500 transition-colors tracking-wider" data-i18n="nav-about">About</a></li>
+                    <li><a href="menu.html" class="font-sans text-gray-500 text-sm hover:text-gold-500 transition-colors tracking-wider" data-i18n="foot-menu">Menu</a></li>
+                    <li><a href="reservations.html" class="font-sans text-gold-500 text-sm tracking-wider" data-i18n="foot-reservations">Reservations</a></li>
+                    <li><a href="ambiance.html" class="font-sans text-gray-500 text-sm hover:text-gold-500 transition-colors tracking-wider" data-i18n="foot-ambiance">Ambiance</a></li>
+                    <li><a href="blog.html" class="font-sans text-gray-500 text-sm hover:text-gold-500 transition-colors tracking-wider" data-i18n="foot-blog">Blog</a></li>
                 </ul>
             </div>
             <!-- Contact -->
             <div>
-                <p class="font-sans text-[10px] tracking-[0.35em] uppercase text-gold-600 mb-6">Contact</p>
+                <p class="font-sans text-[10px] tracking-[0.35em] uppercase text-gold-600 mb-6" data-i18n="res-contact">Contact</p>
                 <ul class="space-y-4">
                     <li>
-                        <p class="font-sans text-[9px] tracking-[0.25em] uppercase text-gray-600 mb-1">Phone</p>
-                        <a href="tel:+590690691098" class="font-sans text-gray-400 text-sm hover:text-gold-500 transition-colors">+590 690 691 098</a>
+                        <p class="font-sans text-[9px] tracking-[0.25em] uppercase text-gray-600 mb-1" data-i18n="foot-phone">Phone</p>
+                        <a href="tel:+590690691098" class="font-sans text-gray-400 text-sm hover:text-gold-500 transition-colors">+590 690 69 10 98</a>
                     </li>
                     <li>
-                        <p class="font-sans text-[9px] tracking-[0.25em] uppercase text-gray-600 mb-1">Hours</p>
-                        <p class="font-sans text-gray-400 text-sm">Tue — Sun · 8:00 AM — 2:00 AM</p>
+                        <p class="font-sans text-[9px] tracking-[0.25em] uppercase text-gray-600 mb-1" data-i18n="foot-email">Email</p>
+                        <a href="mailto:triplerbarrestaurant1@gmail.com" class="font-sans text-gold-500 text-sm hover:text-gold-400 transition-colors break-all">triplerbarrestaurant1@gmail.com</a>
                     </li>
                     <li>
-                        <p class="font-sans text-[9px] tracking-[0.25em] uppercase text-gray-600 mb-1">DJ Nights</p>
-                        <p class="font-sans text-gray-400 text-sm">Fri — Sun · From 8:30 PM</p>
+                        <p class="font-sans text-[9px] tracking-[0.25em] uppercase text-gray-600 mb-1" data-i18n="foot-hours-label">Hours</p>
+                        <p class="font-sans text-gray-400 text-sm" data-i18n="foot-hours-inline">Tue — Sun · 8:00 AM — 2:00 AM</p>
+                    </li>
+                    <li>
+                        <p class="font-sans text-[9px] tracking-[0.25em] uppercase text-gray-600 mb-1" data-i18n="foot-dj-nights">DJ Nights</p>
+                        <p class="font-sans text-gray-400 text-sm" data-i18n="foot-dj-nights-time">Fri — Sun · From 8:30 PM</p>
+                    </li>
+                    <li class="pt-2">
+                        <p class="font-sans text-[9px] tracking-[0.25em] uppercase text-gray-600 mb-2" data-i18n="foot-map">Find Us</p>
+                        <a href="https://maps.app.goo.gl/s2wLVGQDi7BpRMzL6" target="_blank" rel="noopener noreferrer" class="block relative overflow-hidden rounded-sm border border-gold-500/20 hover:border-gold-500/60 transition-all group" style="aspect-ratio:16/9;max-width:320px" aria-label="Open in Google Maps">
+                            <iframe src="https://maps.app.goo.gl/s2wLVGQDi7BpRMzL6" class="w-full h-full pointer-events-none" style="border:0;filter:grayscale(.3) contrast(.95)" loading="lazy" title="Triple R location"></iframe>
+                            <div class="absolute inset-0 bg-deep/0 group-hover:bg-deep/20 transition-all"></div>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -590,6 +622,7 @@
         <div class="flex flex-col md:flex-row justify-between items-center gap-4">
             <p class="font-sans text-gray-700 text-[10px] tracking-[0.3em] uppercase">© 2024 Triple R Bar Restaurant. All rights reserved.</p>
             <p class="font-sans text-gray-700 text-[10px] tracking-[0.3em] uppercase">Sandy Ground · Saint Martin · FWI</p>
+            <p class="font-sans text-gray-700 text-sm tracking-[0.3em] uppercase"><span data-i18n="foot-soul">Designed By <a href="https://www.instagram.com/korekdigitalmarketing/" target="_blank" rel="noopener noreferrer" class="text-gold-500 hover:text-gold-400 transition-colors">Korek Digital Marketing</a></span></p>
         </div>
     </div>
 </footer>
@@ -749,12 +782,8 @@ form.addEventListener('submit', (e) => {
     const time    = document.getElementById('time').value;
     const guests  = document.getElementById('guests').value;
 
-    const paymentAccepted = document.getElementById('acceptPayment').checked;
-
-    if (!name || !email || !date || !time || !guests || !paymentAccepted) {
-        formError.textContent = !paymentAccepted && name && email && date && time && guests
-            ? 'Please accept the \u20AC20 deposit payment to confirm your reservation.'
-            : 'Please fill in all required fields.';
+    if (!name || !email || !date || !time || !guests) {
+        formError.textContent = 'Please fill in all required fields.';
         formError.classList.remove('hidden');
         gsap.fromTo(formError, { x:-10 }, { x:0, duration:0.5, ease:'elastic.out(1,0.5)' });
 
@@ -773,18 +802,92 @@ form.addEventListener('submit', (e) => {
 
     formError.classList.add('hidden');
 
+    // Generate reservation number: TRR-YYYYMMDD-XXXX
+    const now = new Date();
+    const datePart = now.getFullYear().toString()
+        + String(now.getMonth() + 1).padStart(2, '0')
+        + String(now.getDate()).padStart(2, '0');
+    const randomPart = Math.floor(1000 + Math.random() * 9000);
+    const reservationNumber = `TRR-${datePart}-${randomPart}`;
+    document.getElementById('reservationNumber').value = reservationNumber;
+
+    // Customer auto-confirmation email (sent by FormSubmit)
+    document.getElementById('replyToField').value = email;
+    document.getElementById('autoResponseField').value =
+`Dear ${name},
+
+Thank you for choosing Triple R Bar Restaurant.
+
+We have received your reservation request:
+
+  Reservation Number: ${reservationNumber}
+  Date: ${date}
+  Time: ${time}
+  Guests: ${guests}
+
+FINAL STEP — CONFIRM YOUR TABLE
+To confirm your booking, please send a 20€ deposit via Revolut:
+https://revolut.me/rosali0avt
+
+Important: include your reservation number (${reservationNumber}) in the Revolut payment note so we can match it to your booking.
+
+Your table is confirmed once we receive the deposit. You will receive a second email from us confirming the reservation.
+
+For any question, reply to this email or call +590 690 69 10 98.
+
+See you at Triple R.
+— Triple R Bar Restaurant
+31 rue de Sandy Ground, 97150 Saint Martin`;
+
     // Animate submit button
     const btn = document.getElementById('submitBtn');
     const btnText = document.getElementById('submitText');
     gsap.to(btn, { opacity:0.6, duration:0.2 });
     btnText.textContent = 'Sending...';
 
-    // Simulate async submission
-    setTimeout(() => {
+    // Supabase client
+    const _sb = supabase.createClient(
+        'https://bewztaflqnwcxadcnveq.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJld3p0YWZscW53Y3hhZGNudmVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1NzQ1NjUsImV4cCI6MjA5MjE1MDU2NX0.UInpK65sw3ErK7LrzJ1ejd4aXIDY0rajogAOa5sxBzo'
+    );
+
+    const formData = new FormData(form);
+    const payload = {};
+    formData.forEach((value, key) => { payload[key] = value; });
+
+    // PRIMARY: Save to Supabase — works everywhere including local files
+    _sb.from('reservations').insert({
+        reservation_number: reservationNumber,
+        full_name: payload.fullName,
+        email: payload.email,
+        phone: payload.phone || null,
+        date: payload.date,
+        time: payload.time,
+        guests: payload.guests,
+        requests: payload.requests || null,
+        payment_status: 'pending'
+    }).then(({ error }) => {
         gsap.to(btn, { opacity:1, duration:0.2 });
         btnText.textContent = 'Reserve My Table';
+
+        if (error) {
+            console.error('Supabase error:', error.message);
+            formError.textContent = 'Something went wrong. Please try again or email us at triplerbarrestaurant1@gmail.com.';
+            formError.classList.remove('hidden');
+            return;
+        }
+
+        // SUCCESS — show confirmation
+        document.getElementById('resNumberDisplay').textContent = reservationNumber;
         showSuccess();
-    }, 1200);
+
+        // SECONDARY: Send email via FormSubmit (best-effort, may fail on local/file://)
+        fetch(form.action, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(payload)
+        }).catch(e => console.warn('FormSubmit email skipped (normal on local):', e.message));
+    });
 });
 
 function showSuccess() {
@@ -812,6 +915,36 @@ function resetForm() {
     successOverlay.classList.remove('visible');
 }
 
+function copyRevolutLink(btn) {
+    const link = 'https://revolut.me/rosali0avt';
+    const done = () => {
+        const original = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.style.background = '#D4AF37';
+        btn.style.color = '#0a1914';
+        setTimeout(() => {
+            btn.textContent = original;
+            btn.style.background = '';
+            btn.style.color = '';
+        }, 1800);
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(link).then(done).catch(() => {
+            window.prompt('Copy this link:', link);
+        });
+    } else {
+        const ta = document.createElement('textarea');
+        ta.value = link;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); done(); }
+        catch (e) { window.prompt('Copy this link:', link); }
+        document.body.removeChild(ta);
+    }
+}
+
 // ============================================================
 // MAGNETIC BUTTONS
 // ============================================================
@@ -827,5 +960,8 @@ document.querySelectorAll('.magnetic-btn').forEach((btn) => {
     });
 });
 </script>
+<script src="i18n.js"></script>
+<script src="content-loader.js"></script>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </body>
 </html>
