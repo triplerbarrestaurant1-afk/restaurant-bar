@@ -1187,5 +1187,75 @@
 <script src="i18n.js"></script>
 <script src="content-loader.js"></script>
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+// ========== CMS MENU LOADER ==========
+(function() {
+  fetch('/_data/menu.json')
+    .then(r => r.json())
+    .then(data => {
+      const items = (data.items || []).filter(i => i.available !== false);
+      if (!items.length) return;
+
+      const categories = [...new Set(items.map(i => i.category))];
+      const container = document.getElementById('menuContent');
+
+      categories.forEach(cat => {
+        const catItems = items.filter(i => i.category === cat);
+        const catId = 'cms-' + cat.toLowerCase().replace(/\s+/g, '-');
+
+        // Add tab button
+        const tabBar = document.querySelector('.tab-scroll div');
+        if (tabBar && !document.querySelector('[data-tab="' + catId + '"]')) {
+          const btn = document.createElement('button');
+          btn.className = 'tab-btn';
+          btn.dataset.tab = catId;
+          btn.textContent = cat;
+          tabBar.appendChild(btn);
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.menu-section').forEach(s => { s.classList.remove('active'); s.style.opacity = '0'; });
+            btn.classList.add('active');
+            const sec = document.getElementById('section-' + catId);
+            if (sec) { sec.classList.add('active'); setTimeout(() => { sec.style.opacity = '1'; }, 10); }
+          });
+        }
+
+        // Build section
+        const section = document.createElement('div');
+        section.className = 'menu-section';
+        section.id = 'section-' + catId;
+        section.style.transition = 'opacity 0.4s ease';
+
+        let html = '<div class="max-w-2xl"><div class="mb-10"><h2 class="font-serif text-4xl md:text-5xl text-white tracking-wide mb-3">' + cat + '</h2><div class="section-line max-w-xs mb-6"></div></div><div>';
+        catItems.forEach(item => {
+          html += '<div class="menu-item">' +
+            '<div class="flex-1">' +
+            '<div class="flex items-baseline gap-2">' +
+            '<span class="item-name">' + item.title + '</span>' +
+            '<span class="item-dots"></span>' +
+            '<span class="item-price">' + (item.price || '') + '</span>' +
+            '</div>' +
+            (item.description ? '<span class="item-desc">' + item.description + '</span>' : '') +
+            '</div>' +
+            (item.image ? '<img src="' + item.image + '" alt="' + item.title + '" class="w-16 h-16 object-cover ml-4 flex-shrink-0" style="border:1px solid rgba(212,175,55,0.2)">' : '') +
+            '</div>';
+        });
+        html += '</div></div>';
+        section.innerHTML = html;
+        container.querySelector('.max-w-6xl > div').appendChild(section);
+      });
+
+      // Wire up existing tabs to also collapse CMS sections
+      document.querySelectorAll('.tab-btn:not([data-tab^="cms-"])').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.menu-section[id^="section-cms-"]').forEach(s => {
+            s.classList.remove('active'); s.style.opacity = '0';
+          });
+        });
+      });
+    })
+    .catch(() => {});
+})();
+</script>
 </body>
 </html>
