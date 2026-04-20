@@ -850,6 +850,36 @@ window.addEventListener('load', () => {
 <script src="content-loader.js"></script>
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
+// ========== CMS EVENTS LOADER ==========
+(function() {
+  fetch('/_data/events.json')
+    .then(r => r.json())
+    .then(data => {
+      const events = (data.events || []).filter(e => e.active !== false);
+      if (!events.length) return;
+
+      const grid = document.querySelector('#events .grid');
+      if (!grid) return;
+
+      events.forEach(ev => {
+        const div = document.createElement('div');
+        div.className = 'group reveal-up';
+        div.innerHTML =
+          '<div class="overflow-hidden rounded-sm border border-gold-500/20 hover:border-gold-500/50 transition-all duration-500">' +
+          '<img src="' + ev.image + '" alt="' + ev.title + '" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700">' +
+          '</div>' +
+          '<div class="mt-4 text-center">' +
+          '<h3 class="font-serif text-xl text-white group-hover:text-gold-500 transition-colors">' + ev.title + '</h3>' +
+          '<p class="text-gray-500 text-xs tracking-[0.2em] uppercase mt-1">' + (ev.date || '') + '</p>' +
+          (ev.description ? '<p class="text-gray-400 text-sm mt-2 font-accent italic">' + ev.description + '</p>' : '') +
+          '</div>';
+        grid.appendChild(div);
+      });
+    })
+    .catch(() => {});
+})();
+</script>
+<script>
   if (window.netlifyIdentity) {
     window.netlifyIdentity.on("init", function(user) {
       if (!user) {
