@@ -1,5 +1,7 @@
 # Triple R Bar Restaurant — Website
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/acdc69f7-79d3-4b1e-ae1c-8ab9ec6becc9/deploy-status)](https://app.netlify.com/projects/triplerbarrestaurant/deploys)
+
 Official website for **Triple R Bar Restaurant**, located in Sandy Ground, Saint Martin. Cinematic island dining, craft cocktails & DJ vibes.
 
 ## Live Pages
