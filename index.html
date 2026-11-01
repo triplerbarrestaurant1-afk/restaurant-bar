@@ -164,6 +164,33 @@
         @keyframes sparkle{0%,100%{opacity:0;transform:scale(0) translate(0,0)}50%{opacity:1;transform:scale(1)}}
         .logo-particle{position:absolute;width:4px;height:4px;background:#D4AF37;border-radius:50;pointer-events:none;opacity:0}
 
+        /* New fast-food menu: isolated motion, readable even without JavaScript. */
+        .snack-feature{position:relative;overflow:hidden;padding:100px 24px;background:radial-gradient(ellipse at 50% 65%,#30240e 0%,#10150e 45%,#050505 80%);border-bottom:1px solid #d4af3726;scroll-margin-top:100px}
+        .snack-inner{max-width:1280px;margin:auto;position:relative}
+        .snack-heading{display:flex;justify-content:space-between;align-items:end;gap:32px;margin-bottom:36px}
+        .snack-eyebrow{display:inline-flex;align-items:center;gap:12px;color:#e8c76a;font-size:10px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;margin-bottom:20px}
+        .snack-eyebrow::before{content:'';width:30px;height:1px;background:#d4af37}
+        .snack-title{font-family:'Cinzel',serif;font-size:clamp(36px,5.5vw,76px);line-height:1.08;color:#fff}
+        .snack-title em{font-family:'Cormorant Garamond',serif;color:#e8c76a;font-weight:400}
+        .snack-intro{max-width:330px;color:#b9bcb4;font-size:14px;line-height:1.8}
+        .snack-frame{position:relative;padding:8px;border:1px solid #d4af3766;background:#080c08;box-shadow:0 24px 80px #0008}
+        .snack-poster{display:block;position:relative;overflow:hidden}
+        .snack-poster img{display:block;width:100%;height:auto;transition:transform 250ms cubic-bezier(.23,1,.32,1)}
+        .snack-poster::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 30%,#fff5 48%,transparent 66%);transform:translateX(-120%);opacity:0}
+        .snack-footer{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:28px}
+        .snack-details{display:flex;flex-wrap:wrap;gap:12px 24px;color:#d8cba6;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+        .snack-actions{display:flex;flex-wrap:wrap;gap:12px}
+        .snack-action{display:inline-flex;align-items:center;justify-content:center;gap:16px;min-height:48px;padding:14px 24px;border:1px solid #d4af3766;color:#e8c76a;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;transition:transform 200ms cubic-bezier(.23,1,.32,1),opacity 200ms ease}
+        .snack-action-primary{background:#d4af37;color:#080c08;border-color:#d4af37}
+        .snack-action:focus-visible,.snack-poster:focus-visible{outline:3px solid #fff;outline-offset:5px}
+        .snack-feature.snack-pending .snack-enter{opacity:0;transform:translateY(28px)}
+        .snack-feature.snack-visible .snack-enter{animation:snackEnter 800ms cubic-bezier(.23,1,.32,1) both;animation-delay:var(--snack-delay,0ms)}
+        .snack-visible .snack-poster::after{animation:snackSweep 1400ms cubic-bezier(.77,0,.175,1) 350ms both}
+        @keyframes snackEnter{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes snackSweep{0%{transform:translateX(-120%);opacity:0}25%{opacity:.7}100%{transform:translateX(120%);opacity:0}}
+        @media(hover:hover) and (pointer:fine){.snack-poster:hover img{transform:scale(1.015)}.snack-action:hover{transform:translateY(-3px);opacity:.85}}
+        @media(max-width:767px){.snack-feature{padding:64px 20px}.snack-heading{display:block}.snack-intro{margin-top:20px;max-width:100%}.snack-frame{padding:4px}.snack-footer{align-items:start;flex-direction:column}.snack-actions{width:100%}.snack-action{flex:1;padding:14px 16px;letter-spacing:.08em}.snack-details{font-size:10px;gap:12px}}
+        @media(prefers-reduced-motion:reduce){.snack-feature.snack-pending .snack-enter{opacity:1;transform:none}.snack-feature.snack-visible .snack-enter{animation:none}.snack-visible .snack-poster::after{animation:none}.snack-poster img,.snack-action{transition:opacity 200ms ease}.snack-poster:hover img,.snack-action:hover{transform:none}}
         </style>
 </head>
 <body>
@@ -297,31 +324,44 @@
     </div>
 </div>
 
-<!-- ==================== FLYERS / EVENTS ==================== -->
-<section class="py-28 md:py-36 bg-deep" id="events">
-    <div class="max-w-7xl mx-auto px-6 md:px-12">
-        <div class="text-center mb-16">
-            <div class="flex items-center justify-center gap-4 mb-6 reveal-up">
-                <div class="w-12 h-[1px] bg-gold-500/50"></div>
-                <p class="text-gold-500 tracking-[0.3em] uppercase text-[10px] font-semibold">Upcoming Events</p>
-                <div class="w-12 h-[1px] bg-gold-500/50"></div>
+<!-- ==================== NEW FAST FOOD MENU ==================== -->
+<section class="snack-feature" id="fast-food-menu" aria-labelledby="snack-title">
+    <div class="snack-inner">
+        <div class="snack-heading">
+            <div class="snack-enter">
+                <p class="snack-eyebrow" data-i18n="snack-new">New at Triple R</p>
+                <h2 class="snack-title" id="snack-title" data-i18n="snack-title">Big cravings.<br><em>Good mood.</em></h2>
             </div>
-            <h2 class="font-serif text-4xl md:text-6xl text-white reveal-up">Don't Miss the <span class="italic font-accent text-gold-500">Vibe</span></h2>
+            <p class="snack-intro snack-enter" style="--snack-delay:60ms" data-i18n="snack-intro">Meet our new fast food menu. Burgers, crispy chicken, fish and your favourite sides. Find your next favourite below.</p>
         </div>
-        <div class="max-w-xl mx-auto">
-            <!-- Flyer: Grand BBQ -->
-            <div class="group reveal-up">
-                <div class="overflow-hidden rounded-sm border border-gold-500/20 hover:border-gold-500/50 transition-all duration-500">
-                    <img src="pictures & videos/grand BBQ.jpeg" alt="Grand BBQ Event Flyer" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700">
-                </div>
-                <div class="mt-4 text-center">
-                    <h3 class="font-serif text-xl text-white group-hover:text-gold-500 transition-colors">Grand BBQ</h3>
-                    <p class="text-gray-500 text-xs tracking-[0.2em] uppercase mt-1">Triple R Bar Restaurant</p>
-                </div>
+        <div class="snack-frame snack-enter" style="--snack-delay:120ms">
+            <a class="snack-poster" href="pictures%20%26%20videos/NEW.%20fast%20food%20menu.jpeg" target="_blank" rel="noopener" aria-label="Open the new fast food menu at full size">
+                <img src="pictures &amp; videos/NEW. fast food menu.jpeg" alt="Triple R Snack Me fast food menu: 12 options including burgers, chicken, fish and nuggets, priced from €8 to €11.50. Available from 12pm. Call 0690691098 to order." width="1600" height="615" loading="lazy" decoding="async">
+            </a>
+        </div>
+        <div class="snack-footer snack-enter" style="--snack-delay:180ms">
+            <div class="snack-details"><span data-i18n="snack-from">From €8</span><span aria-hidden="true">/</span><span data-i18n="snack-time">Starting from 12pm</span><span aria-hidden="true">/</span><span data-i18n="snack-count">12 tasty options</span></div>
+            <div class="snack-actions">
+                <a class="snack-action" href="pictures%20%26%20videos/NEW.%20fast%20food%20menu.jpeg" target="_blank" rel="noopener"><span data-i18n="snack-view">View full size</span><span aria-hidden="true">↗</span></a>
+                <a class="snack-action snack-action-primary" href="tel:+590690691098"><span data-i18n="snack-call">Call to order</span><span aria-hidden="true">↗</span></a>
             </div>
         </div>
     </div>
 </section>
+<script>
+(() => {
+    const feature = document.getElementById('fast-food-menu');
+    if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const observer = new IntersectionObserver(entries => {
+        if (!entries.some(entry => entry.isIntersecting)) return;
+        feature.classList.remove('snack-pending');
+        feature.classList.add('snack-visible');
+        observer.disconnect();
+    }, { threshold: 0.12 });
+    observer.observe(feature);
+    feature.classList.add('snack-pending');
+})();
+</script>
 
 <!-- ==================== OUR STORY ==================== -->
 <section class="py-28 md:py-44 relative overflow-hidden" id="story">
@@ -530,6 +570,12 @@
                 </div>
                 <p class="text-gray-500 text-xs mt-4 tracking-widest uppercase" data-i18n="gal-6">Crêpe Time</p>
             </div>
+            <div class="shrink-0 w-[280px] sm:w-[350px] md:w-[450px] group">
+                <div class="overflow-hidden aspect-[3/4] rounded-sm border border-gold-500/10">
+                    <img src="pictures & videos/thursday french tacos.jpeg" alt="Thursday French Tacos" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                </div>
+                <p class="text-gray-500 text-xs mt-4 tracking-widest uppercase">Thursday French Tacos</p>
+            </div>
         </div>
     </div>
 </section>
@@ -651,7 +697,7 @@
         </div>
         <div class="border-t border-gold-500/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p class="text-gray-600 text-xs tracking-wider">&copy; 2026 Triple R Bar Restaurant. <span data-i18n="foot-copy">All rights reserved.</span></p>
-            <p class="text-gray-700 text-sm tracking-wider uppercase"><span data-i18n="foot-soul">Designed By <a href="https://www.instagram.com/korekdigitalmarketing/" target="_blank" rel="noopener noreferrer" class="text-gold-500 hover:text-gold-400 transition-colors">Korek Digital Marketing</a></span></p>
+            <p class="text-gray-700 text-sm tracking-wider uppercase"><span data-i18n="foot-soul">Designed By <a href="https://www.korekdigitalmarketing.com/" target="_blank" rel="noopener noreferrer" class="text-gold-500 hover:text-gold-400 transition-colors">Korek Digital Marketing</a></span></p>
         </div>
     </div>
 </footer>
@@ -837,7 +883,7 @@ window.addEventListener('load', () => {
     setTimeout(initScrollAnimations, 100);
 });
 </script>
-<script src="i18n.js"></script>
+<script src="i18n.js?v=fast-food-menu-1"></script>
 <script src="content-loader.js"></script>
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>

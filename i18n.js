@@ -1,5 +1,13 @@
 // ========== TRIPLE R — LANGUAGE TOGGLE (EN/FR) ==========
 const T = {
+  'snack-new':{en:'New at Triple R',fr:'Nouveau chez Triple R'},
+  'snack-title':{en:'Big cravings.<br><em>Good mood.</em>',fr:'Grande faim.<br><em>Bonne humeur.</em>'},
+  'snack-intro':{en:'Meet our new fast food menu. Burgers, crispy chicken, fish and your favourite sides. Find your next favourite below.',fr:'Découvrez notre nouvelle carte de restauration rapide. Burgers, poulet croustillant, poisson et accompagnements. Trouvez votre prochain coup de cœur ci-dessous.'},
+  'snack-from':{en:'From €8',fr:'Dès 8 €'},
+  'snack-time':{en:'Starting from 12pm',fr:'À partir de 12h'},
+  'snack-count':{en:'12 tasty options',fr:'12 options gourmandes'},
+  'snack-view':{en:'View full size',fr:'Voir en grand'},
+  'snack-call':{en:'Call to order',fr:'Appelez pour commander'},
   // Nav (shared)
   'nav-home':{en:'Home',fr:'Accueil'},
   'nav-about':{en:'About',fr:'À propos'},
@@ -30,7 +38,7 @@ const T = {
   'foot-dj-nights-time':{en:'Fri — Sun · From 8:30 PM',fr:'Ven — Dim · À partir de 20h30'},
   'foot-map':{en:'Find Us',fr:'Nous Trouver'},
   'foot-copy':{en:'All rights reserved.',fr:'Tous droits réservés.'},
-  'foot-soul':{en:'Designed By <a href="https://www.instagram.com/korekdigitalmarketing/" target="_blank" rel="noopener noreferrer" class="text-gold-500 hover:text-gold-400 transition-colors">Korek Digital Marketing</a>',fr:'Conçu Par <a href="https://www.instagram.com/korekdigitalmarketing/" target="_blank" rel="noopener noreferrer" class="text-gold-500 hover:text-gold-400 transition-colors">Korek Digital Marketing</a>'},
+  'foot-soul':{en:'Designed By <a href="https://www.korekdigitalmarketing.com/" target="_blank" rel="noopener noreferrer" class="text-gold-500 hover:text-gold-400 transition-colors">Korek Digital Marketing</a>',fr:'Conçu Par <a href="https://www.korekdigitalmarketing.com/" target="_blank" rel="noopener noreferrer" class="text-gold-500 hover:text-gold-400 transition-colors">Korek Digital Marketing</a>'},
 
   // ===== INDEX =====
   'hero-subtitle':{en:'Bar & Restaurant',fr:'Bar & Restaurant'},

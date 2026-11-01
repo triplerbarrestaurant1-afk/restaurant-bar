@@ -4,3 +4,6 @@
 *.avi
 *.png
 pictures & videos/new image/
+
+# Local Netlify folder
+.netlify
