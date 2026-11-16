@@ -84,6 +84,10 @@
         @keyframes fadeInScale{0%{opacity:0;transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
         .float{animation:float 8s ease-in-out infinite}
 
+        /* Festival badge float */
+        .fest-badge{animation:festFloat 4s ease-in-out infinite}
+        @keyframes festFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
         /* Video section */
         .video-container{position:relative}
         .video-container video{transition:opacity 0.6s}
@@ -499,22 +503,68 @@
     </div>
 </section>
 
-<!-- ==================== CINEMATIC VIDEO SECTION ==================== -->
-<section class="relative h-screen flex items-center justify-center overflow-hidden" id="videoSection">
-    <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover opacity-50">
-        <source src="pictures & videos/dj.ambiance.mp4" type="video/mp4">
-    </video>
-    <div class="absolute inset-0 bg-gradient-to-b from-deep/60 via-deep/20 to-deep/80 z-[1]"></div>
-    <div class="absolute inset-0 hero-vignette z-[2]"></div>
-    <!-- Cinematic letterbox -->
-    <div class="absolute top-0 left-0 right-0 h-[12vh] bg-gradient-to-b from-deep to-transparent z-[3]"></div>
-    <div class="absolute bottom-0 left-0 right-0 h-[12vh] bg-gradient-to-t from-deep to-transparent z-[3]"></div>
+<!-- ==================== SXM GASTRONOMIE FESTIVAL ==================== -->
+<section class="relative py-28 md:py-40 overflow-hidden" id="sxmGastronomie">
+    <!-- Ambient glow -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-gold-600/4 rounded-full blur-[250px] pointer-events-none"></div>
+    <div class="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-deep to-transparent z-[1]"></div>
+    <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-deep to-transparent z-[1]"></div>
 
-    <div class="relative z-10 text-center px-4 max-w-4xl">
-        <p class="text-gold-500 tracking-[0.4em] uppercase text-[10px] mb-6 reveal-up" data-i18n="vid-label">Every Weekend</p>
-        <h2 class="font-serif text-5xl md:text-8xl text-white leading-[0.95] mb-6 reveal-up" data-i18n="vid-title">Where the Beat<br>Meets the <span class="italic text-gold-500">Heat</span></h2>
-        <p class="text-gray-400 text-base md:text-lg font-light max-w-xl mx-auto mb-10 reveal-up" data-i18n="vid-p">Every weekend, Triple R transforms into the epicenter of Saint Martin's nightlife. Live DJ sets, Caribbean fusion, and the island's finest cocktails.</p>
-        <a href="ambiance.html" class="magnetic-btn border border-white/30 text-white px-10 py-4 text-[10px] tracking-[0.3em] uppercase font-semibold inline-block reveal-up"><span data-i18n="vid-cta">Experience the Vibe</span></a>
+    <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
+        <!-- Section heading -->
+        <div class="text-center mb-16 md:mb-24">
+            <div class="flex items-center justify-center gap-4 mb-6 reveal-up">
+                <div class="w-12 h-[1px] bg-gold-500/50 line-reveal"></div>
+                <p class="text-gold-500 tracking-[0.35em] uppercase text-[10px] font-semibold" data-i18n="fest-label">Festival de la Gastronomie</p>
+                <div class="w-12 h-[1px] bg-gold-500/50 line-reveal"></div>
+            </div>
+            <h2 class="font-serif text-4xl md:text-6xl lg:text-7xl text-white leading-[1.05] reveal-up" data-i18n="fest-title">
+                SXM <span class="text-gold-500 italic" style="font-family:'Cormorant Garamond',serif;font-style:italic">Gastronomie</span>
+            </h2>
+            <p class="font-accent text-lg md:text-xl text-gray-400 mt-6 max-w-2xl mx-auto reveal-up" style="font-family:'Cormorant Garamond',serif;font-weight:300" data-i18n="fest-sub">
+                Triple R — proudly representing Caribbean soul at the 6th edition of Saint Martin's Festival de la Gastronomie.
+            </p>
+        </div>
+
+        <!-- Two-card layout with staggered animation -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-10 items-center">
+            <!-- Card 1: Team photo -->
+            <div class="group relative reveal-up" id="festCard1">
+                <div class="overflow-hidden rounded-sm border border-gold-500/10 relative aspect-[3/4] sm:aspect-[4/5]">
+                    <img src="pictures & videos/sxm Gastronomie/WhatsApp Image 2026-11-16 at 19.25.56.jpeg"
+                         alt="Triple R team at Festival de la Gastronomie Saint-Martin"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.4s] ease-out">
+                    <div class="absolute inset-0 bg-gradient-to-t from-deep/80 via-transparent to-transparent"></div>
+                    <!-- Floating badge -->
+                    <div class="absolute top-5 right-5 bg-gold-500/90 text-deep px-4 py-2 rounded-sm backdrop-blur-sm fest-badge">
+                        <p class="text-[9px] tracking-[0.3em] uppercase font-bold">6th Edition</p>
+                    </div>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-10">
+                    <p class="text-gold-500 text-[10px] tracking-[0.35em] uppercase font-semibold mb-2" data-i18n="fest-team-label">Our Crew</p>
+                    <h3 class="font-serif text-2xl md:text-3xl text-white" data-i18n="fest-team-title">Good Food, Good Mood</h3>
+                </div>
+            </div>
+
+            <!-- Card 2: Festival menu flyer -->
+            <div class="group relative reveal-up lg:translate-y-16" id="festCard2">
+                <div class="overflow-hidden rounded-sm border border-gold-500/10 relative aspect-[3/4] sm:aspect-[4/5]">
+                    <img src="pictures & videos/sxm Gastronomie/WhatsApp Image 2026-11-16 at 19.25.54.jpeg"
+                         alt="Triple R Festival Menu — Festival de la Gastronomie Saint-Martin"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.4s] ease-out">
+                    <div class="absolute inset-0 bg-gradient-to-t from-deep/60 via-transparent to-transparent"></div>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-10">
+                    <p class="text-gold-500 text-[10px] tracking-[0.35em] uppercase font-semibold mb-2" data-i18n="fest-menu-label">Festival Menu</p>
+                    <h3 class="font-serif text-2xl md:text-3xl text-white" data-i18n="fest-menu-title">Notre Menu</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="text-center mt-16 reveal-up">
+            <a href="menu.html" class="magnetic-btn border border-gold-500 text-gold-500 px-10 py-4 text-[10px] tracking-[0.3em] uppercase font-semibold inline-block"><span data-i18n="fest-cta">Discover the Menu</span></a>
+        </div>
     </div>
 </section>
 
